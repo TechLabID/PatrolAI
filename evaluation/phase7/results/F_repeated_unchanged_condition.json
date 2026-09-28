@@ -1,0 +1,18 @@
+{
+  "category": "temporal",
+  "ground_truth": {
+    "category": "temporal",
+    "expected_condition": "INDICATOR_RED",
+    "expected_incident_count": 0,
+    "expected_temporal_outcome": "NO_CHANGE",
+    "id": "F_repeated_unchanged_condition",
+    "target_id": "SWG_05/Indicator_03"
+  },
+  "id": "F_repeated_unchanged_condition",
+  "observed": {
+    "incident_created": false,
+    "latency_ms": 0.0158,
+    "outcome": "NO_CHANGE"
+  },
+  "passed": true
+}

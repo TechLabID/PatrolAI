@@ -1,0 +1,43 @@
+{
+  "category": "fusion",
+  "ground_truth": {
+    "category": "fusion",
+    "expected_condition": "UNKNOWN",
+    "expected_fusion_outcome": "INSUFFICIENT",
+    "expected_verification": "UNRESOLVED",
+    "id": "E_insufficient_multi_source",
+    "target_id": "SWG_05/Indicator_03"
+  },
+  "id": "E_insufficient_multi_source",
+  "observed": {
+    "action": "REQUEST_ADDITIONAL_EVIDENCE",
+    "final_condition": "UNKNOWN",
+    "fusion_status": "INSUFFICIENT",
+    "latency_ms": 0.012,
+    "provenance": [
+      {
+        "camera_id": "VG_CCTV_02",
+        "condition": "INDICATOR_RED",
+        "observation_id": "obs_phase7_one_source",
+        "quality": "SUFFICIENT",
+        "score": 0.958719,
+        "timestamp": "2026-09-27T05:32:34.1777284Z"
+      },
+      {
+        "camera_id": "VG_MOBILE_01",
+        "condition": "UNKNOWN",
+        "observation_id": "obs_phase7_unknown",
+        "quality": "INSUFFICIENT",
+        "score": 0.0,
+        "timestamp": "2026-09-27T05:32:34.1777284Z"
+      }
+    ],
+    "reason": "fewer_than_two_sufficient_sources",
+    "schema_version": 1,
+    "source_count": 2,
+    "sufficient_source_count": 1,
+    "target_id": "SWG_05/Indicator_03",
+    "verification": "UNRESOLVED"
+  },
+  "passed": true
+}

@@ -1,0 +1,54 @@
+{
+  "observation_id": "synthetic_red_001",
+  "camera_id": "FIXTURE_01",
+  "target_id": "fixture/indicator_03",
+  "timestamp": "2026-09-27T00:00:00Z",
+  "condition": "INDICATOR_RED",
+  "confidence": 0.970537,
+  "roi": [
+    211,
+    41,
+    48,
+    48
+  ],
+  "measurements": {
+    "colors": {
+      "RED": {
+        "area_pixels": 496,
+        "area_fraction": 0.215278,
+        "fill_ratio": 0.7936,
+        "aspect_ratio": 1.0,
+        "center_score": 0.970537,
+        "touches_roi_border": false
+      },
+      "AMBER": {
+        "area_pixels": 0,
+        "area_fraction": 0.0,
+        "fill_ratio": 0.0,
+        "aspect_ratio": 0.0,
+        "center_score": 0.0,
+        "touches_roi_border": false
+      },
+      "GREEN": {
+        "area_pixels": 0,
+        "area_fraction": 0.0,
+        "fill_ratio": 0.0,
+        "aspect_ratio": 0.0,
+        "center_score": 0.0,
+        "touches_roi_border": false
+      }
+    },
+    "dominance": 1.0,
+    "candidate_score": 0.970537,
+    "score_threshold": 0.6,
+    "minimum_component_pixels": 16
+  },
+  "evidence_quality": "SUFFICIENT",
+  "source_type": "synthetic_fixture",
+  "frame_sha256": "b90c609c955005fb2f23a68a1ce8660179dc76c036886821f0f26afa15dbcba9",
+  "opencv_version": "5.0.0",
+  "schema_version": 1,
+  "method": "hsv_indicator_v1",
+  "confidence_kind": "deterministic_visual_score_not_probability",
+  "domain": "simulated_visual_condition"
+}

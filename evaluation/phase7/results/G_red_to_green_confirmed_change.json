@@ -1,0 +1,22 @@
+{
+  "category": "temporal",
+  "ground_truth": {
+    "category": "temporal",
+    "expected_condition": "INDICATOR_GREEN",
+    "expected_incident_count": 1,
+    "expected_previous_condition": "INDICATOR_RED",
+    "expected_temporal_outcome": "CONFIRMED_CHANGE",
+    "id": "G_red_to_green_confirmed_change",
+    "target_id": "SWG_05/Indicator_03"
+  },
+  "id": "G_red_to_green_confirmed_change",
+  "observed": {
+    "change_id": "chg_b9e4c851cc267d893088bf6d",
+    "current_condition": "INDICATOR_GREEN",
+    "incident_id": "inc_409833db1387049c6d5107de",
+    "latency_ms": 0.0329,
+    "outcome": "CONFIRMED_CHANGE",
+    "previous_condition": "INDICATOR_RED"
+  },
+  "passed": true
+}

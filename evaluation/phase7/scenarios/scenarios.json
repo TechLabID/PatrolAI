@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "ground_truth_kind": "explicit_simulated_ground_truth",
+  "scenarios": [
+    {
+      "id": "A_clear_red",
+      "category": "perception",
+      "target_id": "SWG_05/Indicator_03",
+      "fixture": "tests/fixtures/phase2/unity/obs_583f270b8e5a4465ab668f223a4a62db/observation.json",
+      "expected_condition": "INDICATOR_RED",
+      "expected_evidence_quality": "SUFFICIENT"
+    },
+    {
+      "id": "B_clear_green",
+      "category": "perception",
+      "target_id": "SWG_05/Indicator_03",
+      "fixture": "evaluation/phase7/scenarios/fixtures/green/obs_3ccb675e1d66434dba9fc0e41035922c.json",
+      "expected_condition": "INDICATOR_GREEN",
+      "expected_evidence_quality": "SUFFICIENT"
+    },
+    {
+      "id": "C_primary_insufficient_secondary_sufficient",
+      "category": "active_reobservation",
+      "target_id": "SWG_05/Indicator_03",
+      "fixture": "tests/fixtures/phase2/unity/obs_583f270b8e5a4465ab668f223a4a62db/observation.json",
+      "expected_condition": "INDICATOR_RED",
+      "expected_primary_condition": "UNKNOWN",
+      "expected_primary_quality": "INSUFFICIENT",
+      "expected_secondary_quality": "SUFFICIENT",
+      "expected_temporal_outcome": null
+    },
+    {
+      "id": "D_multi_source_agreement",
+      "category": "fusion",
+      "target_id": "SWG_05/Indicator_03",
+      "expected_condition": "INDICATOR_RED",
+      "expected_fusion_outcome": "CONSISTENT",
+      "expected_verification": "VERIFIED"
+    },
+    {
+      "id": "E_insufficient_multi_source",
+      "category": "fusion",
+      "target_id": "SWG_05/Indicator_03",
+      "expected_condition": "UNKNOWN",
+      "expected_fusion_outcome": "INSUFFICIENT",
+      "expected_verification": "UNRESOLVED"
+    },
+    {
+      "id": "F_repeated_unchanged_condition",
+      "category": "temporal",
+      "target_id": "SWG_05/Indicator_03",
+      "expected_condition": "INDICATOR_RED",
+      "expected_temporal_outcome": "NO_CHANGE",
+      "expected_incident_count": 0
+    },
+    {
+      "id": "G_red_to_green_confirmed_change",
+      "category": "temporal",
+      "target_id": "SWG_05/Indicator_03",
+      "expected_condition": "INDICATOR_GREEN",
+      "expected_previous_condition": "INDICATOR_RED",
+      "expected_temporal_outcome": "CONFIRMED_CHANGE",
+      "expected_incident_count": 1
+    },
+    {
+      "id": "H_replay_same_incident",
+      "category": "temporal",
+      "target_id": "SWG_05/Indicator_03",
+      "expected_condition": "INDICATOR_GREEN",
+      "expected_temporal_outcome": "CONFIRMED_CHANGE",
+      "expected_duplicate_incident_count": 0,
+      "expected_idempotent_replay": true
+    },
+    {
+      "id": "I_cloud_unavailable_local_preserved",
+      "category": "cloud_local_first",
+      "target_id": "SWG_05/Indicator_03",
+      "expected_sync_state": "SYNC_FAILED",
+      "expected_local_evidence_preserved": true,
+      "expected_duplicate_cloud_incident_count": 0
+    },
+    {
+      "id": "J_multi_source_conflict",
+      "category": "fusion",
+      "target_id": "SWG_05/Indicator_03",
+      "expected_condition": "UNKNOWN",
+      "expected_fusion_outcome": "CONFLICT",
+      "expected_verification": "UNRESOLVED"
+    }
+  ]
+}

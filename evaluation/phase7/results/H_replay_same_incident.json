@@ -1,0 +1,23 @@
+{
+  "category": "temporal",
+  "ground_truth": {
+    "category": "temporal",
+    "expected_condition": "INDICATOR_GREEN",
+    "expected_duplicate_incident_count": 0,
+    "expected_idempotent_replay": true,
+    "expected_temporal_outcome": "CONFIRMED_CHANGE",
+    "id": "H_replay_same_incident",
+    "target_id": "SWG_05/Indicator_03"
+  },
+  "id": "H_replay_same_incident",
+  "observed": {
+    "duplicate_incident_count": 0,
+    "idempotent_replay": true,
+    "incident_count_after_replay": 1,
+    "incident_count_before_replay": 1,
+    "incident_id": "inc_409833db1387049c6d5107de",
+    "latency_ms": 6.5067,
+    "outcome": "CONFIRMED_CHANGE"
+  },
+  "passed": true
+}

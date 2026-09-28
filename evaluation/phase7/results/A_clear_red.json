@@ -1,0 +1,19 @@
+{
+  "category": "perception",
+  "ground_truth": {
+    "category": "perception",
+    "expected_condition": "INDICATOR_RED",
+    "expected_evidence_quality": "SUFFICIENT",
+    "fixture": "tests/fixtures/phase2/unity/obs_583f270b8e5a4465ab668f223a4a62db/observation.json",
+    "id": "A_clear_red",
+    "target_id": "SWG_05/Indicator_03"
+  },
+  "id": "A_clear_red",
+  "observed": {
+    "condition": "INDICATOR_RED",
+    "latency_ms": 16.5361,
+    "quality": "SUFFICIENT",
+    "score": 0.958719
+  },
+  "passed": true
+}

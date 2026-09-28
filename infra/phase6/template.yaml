@@ -1,0 +1,60 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: VISIONGUARD Phase 6 incident evidence validation pipeline
+
+Resources:
+  IncidentEvidenceBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
+
+  IncidentValidatorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../../cloud/aws
+      Handler: lambda_handler.handler
+      Runtime: python3.12
+      Timeout: 15
+      MemorySize: 128
+      Policies:
+        - S3ReadPolicy:
+            BucketName: !Ref IncidentEvidenceBucket
+        - S3WritePolicy:
+            BucketName: !Ref IncidentEvidenceBucket
+      Events:
+        IncidentPackageUploaded:
+          Type: S3
+          Properties:
+            Bucket: !Ref IncidentEvidenceBucket
+            Events: s3:ObjectCreated:*
+            Filter:
+              S3Key:
+                Rules:
+                  - Name: prefix
+                    Value: visionguard/incidents/
+                  - Name: suffix
+                    Value: package.json
+
+  IncidentValidatorLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${IncidentValidatorFunction}
+      RetentionInDays: 30
+
+Outputs:
+  IncidentEvidenceBucketName:
+    Value: !Ref IncidentEvidenceBucket
+  IncidentValidatorFunctionName:
+    Value: !Ref IncidentValidatorFunction
+  IncidentValidatorLogGroupName:
+    Value: !Ref IncidentValidatorLogGroup

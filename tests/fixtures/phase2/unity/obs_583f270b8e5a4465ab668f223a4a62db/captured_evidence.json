@@ -1,0 +1,54 @@
+{
+  "observation_id": "obs_583f270b8e5a4465ab668f223a4a62db",
+  "camera_id": "VG_CCTV_01",
+  "target_id": "SWG_05/Indicator_03",
+  "timestamp": "2026-09-27T05:32:34.1777284Z",
+  "condition": "INDICATOR_RED",
+  "confidence": 0.958719,
+  "roi": [
+    604,
+    324,
+    72,
+    72
+  ],
+  "measurements": {
+    "colors": {
+      "RED": {
+        "area_pixels": 1016,
+        "area_fraction": 0.195988,
+        "fill_ratio": 0.806349,
+        "aspect_ratio": 0.972222,
+        "center_score": 0.986111,
+        "touches_roi_border": false
+      },
+      "AMBER": {
+        "area_pixels": 0,
+        "area_fraction": 0.0,
+        "fill_ratio": 0.0,
+        "aspect_ratio": 0.0,
+        "center_score": 0.0,
+        "touches_roi_border": false
+      },
+      "GREEN": {
+        "area_pixels": 0,
+        "area_fraction": 0.0,
+        "fill_ratio": 0.0,
+        "aspect_ratio": 0.0,
+        "center_score": 0.0,
+        "touches_roi_border": false
+      }
+    },
+    "dominance": 1.0,
+    "candidate_score": 0.958719,
+    "score_threshold": 0.6,
+    "minimum_component_pixels": 16
+  },
+  "evidence_quality": "SUFFICIENT",
+  "source_type": "unity",
+  "frame_sha256": "e7a9f3e634c07da60fbf3cf8509840fa65a6127646b6243e31967c9324bad343",
+  "opencv_version": "5.0.0",
+  "schema_version": 1,
+  "method": "hsv_indicator_v1",
+  "confidence_kind": "deterministic_visual_score_not_probability",
+  "domain": "simulated_visual_condition"
+}

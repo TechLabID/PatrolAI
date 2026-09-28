@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "observation_id": "synthetic_red_001",
+  "camera_id": "FIXTURE_01",
+  "timestamp": "2026-09-27T00:00:00Z",
+  "source_type": "synthetic_fixture",
+  "frame": "synthetic_indicators.png",
+  "frame_sha256": "b90c609c955005fb2f23a68a1ce8660179dc76c036886821f0f26afa15dbcba9",
+  "width": 320,
+  "height": 180,
+  "camera_pose": null,
+  "metadata": {
+    "target_id": "fixture/indicator_03",
+    "roi": [
+      211,
+      41,
+      48,
+      48
+    ],
+    "provenance": "synthetic_test_only"
+  }
+}

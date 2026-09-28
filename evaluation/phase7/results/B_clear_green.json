@@ -1,0 +1,19 @@
+{
+  "category": "perception",
+  "ground_truth": {
+    "category": "perception",
+    "expected_condition": "INDICATOR_GREEN",
+    "expected_evidence_quality": "SUFFICIENT",
+    "fixture": "evaluation/phase7/scenarios/fixtures/green/obs_3ccb675e1d66434dba9fc0e41035922c.json",
+    "id": "B_clear_green",
+    "target_id": "SWG_05/Indicator_03"
+  },
+  "id": "B_clear_green",
+  "observed": {
+    "condition": "INDICATOR_GREEN",
+    "latency_ms": 12.1733,
+    "quality": "SUFFICIENT",
+    "score": 0.907407
+  },
+  "passed": true
+}

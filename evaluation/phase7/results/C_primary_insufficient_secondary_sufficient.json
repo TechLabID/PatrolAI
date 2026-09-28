@@ -1,0 +1,29 @@
+{
+  "category": "active_reobservation",
+  "ground_truth": {
+    "category": "active_reobservation",
+    "expected_condition": "INDICATOR_RED",
+    "expected_primary_condition": "UNKNOWN",
+    "expected_primary_quality": "INSUFFICIENT",
+    "expected_secondary_quality": "SUFFICIENT",
+    "expected_temporal_outcome": null,
+    "fixture": "tests/fixtures/phase2/unity/obs_583f270b8e5a4465ab668f223a4a62db/observation.json",
+    "id": "C_primary_insufficient_secondary_sufficient",
+    "target_id": "SWG_05/Indicator_03"
+  },
+  "id": "C_primary_insufficient_secondary_sufficient",
+  "observed": {
+    "decision_latency_ms": 0.0172,
+    "opencv_latency_ms": 15.0599,
+    "primary_condition": "UNKNOWN",
+    "primary_quality": "INSUFFICIENT",
+    "primary_score": 0.0,
+    "reobservation_action": "MOVE_TO_INSPECTION_POSE",
+    "score_improvement": 0.958719,
+    "secondary_condition": "INDICATOR_RED",
+    "secondary_quality": "SUFFICIENT",
+    "secondary_score": 0.958719,
+    "verification": "VERIFIED"
+  },
+  "passed": true
+}

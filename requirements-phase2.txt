@@ -1,0 +1,3 @@
+# Python 3.12 x64; isolated .venv-phase2. Never substitute OpenCV 4.
+opencv-python==5.0.0.93
+numpy==2.2.6

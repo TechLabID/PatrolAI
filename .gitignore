@@ -1,0 +1,30 @@
+# Unity generated
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+UserSettings/
+MemoryCaptures/
+Recordings/
+
+# IDE
+.vs/
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.venv-*/
+.pytest_cache/
+
+# Runtime-generated VisionGuard data
+exchange/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini

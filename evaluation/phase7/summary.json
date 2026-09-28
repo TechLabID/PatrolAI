@@ -1,0 +1,397 @@
+{
+  "all_passed": true,
+  "failed_scenarios": 0,
+  "ground_truth_kind": "explicit_simulated_ground_truth",
+  "known_limitations": [
+    "Evaluation uses a small deterministic suite, not a population-scale accuracy benchmark.",
+    "Visual inputs are Unity-rendered simulated observations; no physical CCTV or drone was measured.",
+    "Latency is a single local-machine run and is not a statistically stable performance benchmark.",
+    "No physical drone movement latency is measured.",
+    "No real AWS upload, Lambda execution, CloudWatch delivery, or AWS latency is measured.",
+    "Cloud failure and S3 replay behavior use an in-memory test transport."
+  ],
+  "metrics": {
+    "active_reobservation": {
+      "case_count": 1,
+      "primary_quality": "INSUFFICIENT",
+      "primary_score": 0.0,
+      "reobservation_success_rate": 1.0,
+      "score_improvement": 0.958719,
+      "secondary_quality": "SUFFICIENT",
+      "secondary_score": 0.958719
+    },
+    "cloud_local_first": {
+      "case_count": 1,
+      "deterministic_package_hash_consistency": true,
+      "idempotent_reupload_correctness": true,
+      "observed_failure_state": "SYNC_FAILED",
+      "package_generation_success_rate": 1.0,
+      "safe_local_preservation_on_cloud_failure": true
+    },
+    "fusion": {
+      "case_count": 3,
+      "conflict_rate": 0.333333,
+      "consistent_rate": 0.333333,
+      "false_verified_count": 0,
+      "insufficient_rate": 0.333333,
+      "verified_rate": 0.333333
+    },
+    "perception": {
+      "case_count": 3,
+      "correct_indicator_classification_rate": 0.666667,
+      "insufficient_evidence_rate": 0.333333,
+      "sufficient_evidence_rate": 0.666667,
+      "unknown_rate": 0.333333
+    },
+    "temporal": {
+      "case_count": 3,
+      "confirmed_change_correctness": 1.0,
+      "duplicate_incident_count": 0,
+      "false_incident_count": 0,
+      "idempotent_replay_correctness": 1.0,
+      "no_change_correctness": 1.0
+    }
+  },
+  "passed_scenarios": 10,
+  "scenario_count": 10,
+  "scenarios": [
+    {
+      "category": "perception",
+      "ground_truth": {
+        "category": "perception",
+        "expected_condition": "INDICATOR_RED",
+        "expected_evidence_quality": "SUFFICIENT",
+        "fixture": "tests/fixtures/phase2/unity/obs_583f270b8e5a4465ab668f223a4a62db/observation.json",
+        "id": "A_clear_red",
+        "target_id": "SWG_05/Indicator_03"
+      },
+      "id": "A_clear_red",
+      "observed": {
+        "condition": "INDICATOR_RED",
+        "latency_ms": 16.5361,
+        "quality": "SUFFICIENT",
+        "score": 0.958719
+      },
+      "passed": true
+    },
+    {
+      "category": "perception",
+      "ground_truth": {
+        "category": "perception",
+        "expected_condition": "INDICATOR_GREEN",
+        "expected_evidence_quality": "SUFFICIENT",
+        "fixture": "evaluation/phase7/scenarios/fixtures/green/obs_3ccb675e1d66434dba9fc0e41035922c.json",
+        "id": "B_clear_green",
+        "target_id": "SWG_05/Indicator_03"
+      },
+      "id": "B_clear_green",
+      "observed": {
+        "condition": "INDICATOR_GREEN",
+        "latency_ms": 12.1733,
+        "quality": "SUFFICIENT",
+        "score": 0.907407
+      },
+      "passed": true
+    },
+    {
+      "category": "active_reobservation",
+      "ground_truth": {
+        "category": "active_reobservation",
+        "expected_condition": "INDICATOR_RED",
+        "expected_primary_condition": "UNKNOWN",
+        "expected_primary_quality": "INSUFFICIENT",
+        "expected_secondary_quality": "SUFFICIENT",
+        "expected_temporal_outcome": null,
+        "fixture": "tests/fixtures/phase2/unity/obs_583f270b8e5a4465ab668f223a4a62db/observation.json",
+        "id": "C_primary_insufficient_secondary_sufficient",
+        "target_id": "SWG_05/Indicator_03"
+      },
+      "id": "C_primary_insufficient_secondary_sufficient",
+      "observed": {
+        "decision_latency_ms": 0.0172,
+        "opencv_latency_ms": 15.0599,
+        "primary_condition": "UNKNOWN",
+        "primary_quality": "INSUFFICIENT",
+        "primary_score": 0.0,
+        "reobservation_action": "MOVE_TO_INSPECTION_POSE",
+        "score_improvement": 0.958719,
+        "secondary_condition": "INDICATOR_RED",
+        "secondary_quality": "SUFFICIENT",
+        "secondary_score": 0.958719,
+        "verification": "VERIFIED"
+      },
+      "passed": true
+    },
+    {
+      "category": "fusion",
+      "ground_truth": {
+        "category": "fusion",
+        "expected_condition": "INDICATOR_RED",
+        "expected_fusion_outcome": "CONSISTENT",
+        "expected_verification": "VERIFIED",
+        "id": "D_multi_source_agreement",
+        "target_id": "SWG_05/Indicator_03"
+      },
+      "id": "D_multi_source_agreement",
+      "observed": {
+        "action": "RECORD",
+        "final_condition": "INDICATOR_RED",
+        "fusion_status": "CONSISTENT",
+        "latency_ms": 0.0225,
+        "provenance": [
+          {
+            "camera_id": "VG_CCTV_02",
+            "condition": "INDICATOR_RED",
+            "observation_id": "obs_phase7_agree_cctv",
+            "quality": "SUFFICIENT",
+            "score": 0.958719,
+            "timestamp": "2026-09-27T05:32:34.1777284Z"
+          },
+          {
+            "camera_id": "VG_MOBILE_01",
+            "condition": "INDICATOR_RED",
+            "observation_id": "obs_phase7_agree_mobile",
+            "quality": "SUFFICIENT",
+            "score": 0.958719,
+            "timestamp": "2026-09-27T05:32:34.1777284Z"
+          }
+        ],
+        "reason": "multiple_sufficient_sources_agree",
+        "schema_version": 1,
+        "source_count": 2,
+        "sufficient_source_count": 2,
+        "target_id": "SWG_05/Indicator_03",
+        "verification": "VERIFIED"
+      },
+      "passed": true
+    },
+    {
+      "category": "fusion",
+      "ground_truth": {
+        "category": "fusion",
+        "expected_condition": "UNKNOWN",
+        "expected_fusion_outcome": "INSUFFICIENT",
+        "expected_verification": "UNRESOLVED",
+        "id": "E_insufficient_multi_source",
+        "target_id": "SWG_05/Indicator_03"
+      },
+      "id": "E_insufficient_multi_source",
+      "observed": {
+        "action": "REQUEST_ADDITIONAL_EVIDENCE",
+        "final_condition": "UNKNOWN",
+        "fusion_status": "INSUFFICIENT",
+        "latency_ms": 0.012,
+        "provenance": [
+          {
+            "camera_id": "VG_CCTV_02",
+            "condition": "INDICATOR_RED",
+            "observation_id": "obs_phase7_one_source",
+            "quality": "SUFFICIENT",
+            "score": 0.958719,
+            "timestamp": "2026-09-27T05:32:34.1777284Z"
+          },
+          {
+            "camera_id": "VG_MOBILE_01",
+            "condition": "UNKNOWN",
+            "observation_id": "obs_phase7_unknown",
+            "quality": "INSUFFICIENT",
+            "score": 0.0,
+            "timestamp": "2026-09-27T05:32:34.1777284Z"
+          }
+        ],
+        "reason": "fewer_than_two_sufficient_sources",
+        "schema_version": 1,
+        "source_count": 2,
+        "sufficient_source_count": 1,
+        "target_id": "SWG_05/Indicator_03",
+        "verification": "UNRESOLVED"
+      },
+      "passed": true
+    },
+    {
+      "category": "temporal",
+      "ground_truth": {
+        "category": "temporal",
+        "expected_condition": "INDICATOR_RED",
+        "expected_incident_count": 0,
+        "expected_temporal_outcome": "NO_CHANGE",
+        "id": "F_repeated_unchanged_condition",
+        "target_id": "SWG_05/Indicator_03"
+      },
+      "id": "F_repeated_unchanged_condition",
+      "observed": {
+        "incident_created": false,
+        "latency_ms": 0.0158,
+        "outcome": "NO_CHANGE"
+      },
+      "passed": true
+    },
+    {
+      "category": "temporal",
+      "ground_truth": {
+        "category": "temporal",
+        "expected_condition": "INDICATOR_GREEN",
+        "expected_incident_count": 1,
+        "expected_previous_condition": "INDICATOR_RED",
+        "expected_temporal_outcome": "CONFIRMED_CHANGE",
+        "id": "G_red_to_green_confirmed_change",
+        "target_id": "SWG_05/Indicator_03"
+      },
+      "id": "G_red_to_green_confirmed_change",
+      "observed": {
+        "change_id": "chg_b9e4c851cc267d893088bf6d",
+        "current_condition": "INDICATOR_GREEN",
+        "incident_id": "inc_409833db1387049c6d5107de",
+        "latency_ms": 0.0329,
+        "outcome": "CONFIRMED_CHANGE",
+        "previous_condition": "INDICATOR_RED"
+      },
+      "passed": true
+    },
+    {
+      "category": "temporal",
+      "ground_truth": {
+        "category": "temporal",
+        "expected_condition": "INDICATOR_GREEN",
+        "expected_duplicate_incident_count": 0,
+        "expected_idempotent_replay": true,
+        "expected_temporal_outcome": "CONFIRMED_CHANGE",
+        "id": "H_replay_same_incident",
+        "target_id": "SWG_05/Indicator_03"
+      },
+      "id": "H_replay_same_incident",
+      "observed": {
+        "duplicate_incident_count": 0,
+        "idempotent_replay": true,
+        "incident_count_after_replay": 1,
+        "incident_count_before_replay": 1,
+        "incident_id": "inc_409833db1387049c6d5107de",
+        "latency_ms": 6.5067,
+        "outcome": "CONFIRMED_CHANGE"
+      },
+      "passed": true
+    },
+    {
+      "category": "cloud_local_first",
+      "ground_truth": {
+        "category": "cloud_local_first",
+        "expected_duplicate_cloud_incident_count": 0,
+        "expected_local_evidence_preserved": true,
+        "expected_sync_state": "SYNC_FAILED",
+        "id": "I_cloud_unavailable_local_preserved",
+        "target_id": "SWG_05/Indicator_03"
+      },
+      "id": "I_cloud_unavailable_local_preserved",
+      "observed": {
+        "deterministic_package_hash_consistency": true,
+        "duplicate_cloud_incident_count": 0,
+        "failure_reason": "simulated_cloud_unavailable",
+        "latency_ms": 6.525,
+        "local_evidence_preserved": true,
+        "package_generation_success": true,
+        "package_sha256": "6b66e2eefb1ba78a72049b68b2eca4cb8e3ffaa6cb73958673b7d4614e62da9f",
+        "sync_state": "SYNC_FAILED"
+      },
+      "passed": true
+    },
+    {
+      "category": "fusion",
+      "ground_truth": {
+        "category": "fusion",
+        "expected_condition": "UNKNOWN",
+        "expected_fusion_outcome": "CONFLICT",
+        "expected_verification": "UNRESOLVED",
+        "id": "J_multi_source_conflict",
+        "target_id": "SWG_05/Indicator_03"
+      },
+      "id": "J_multi_source_conflict",
+      "observed": {
+        "action": "REQUEST_ADDITIONAL_EVIDENCE",
+        "final_condition": "UNKNOWN",
+        "fusion_status": "CONFLICT",
+        "latency_ms": 0.0084,
+        "provenance": [
+          {
+            "camera_id": "VG_CCTV_02",
+            "condition": "INDICATOR_RED",
+            "observation_id": "obs_phase7_conflict_red",
+            "quality": "SUFFICIENT",
+            "score": 0.958719,
+            "timestamp": "2026-09-27T05:32:34.1777284Z"
+          },
+          {
+            "camera_id": "VG_MOBILE_01",
+            "condition": "INDICATOR_GREEN",
+            "observation_id": "obs_phase7_conflict_green",
+            "quality": "SUFFICIENT",
+            "score": 0.907407,
+            "timestamp": "2026-09-28T06:50:24.7855366Z"
+          }
+        ],
+        "reason": "sufficient_sources_disagree",
+        "schema_version": 1,
+        "source_count": 2,
+        "sufficient_source_count": 2,
+        "target_id": "SWG_05/Indicator_03",
+        "verification": "UNRESOLVED"
+      },
+      "passed": true
+    }
+  ],
+  "schema_version": 1,
+  "suite": "VISIONGUARD_PHASE7_EVALUATION",
+  "timing": {
+    "fusion_ms": {
+      "max_ms": 0.0225,
+      "mean_ms": 0.0143,
+      "measurements_ms": [
+        0.0225,
+        0.012,
+        0.0084
+      ],
+      "min_ms": 0.0084,
+      "samples": 3
+    },
+    "opencv_evidence_processing_ms": {
+      "max_ms": 16.5361,
+      "mean_ms": 14.589767,
+      "measurements_ms": [
+        16.5361,
+        12.1733,
+        15.0599
+      ],
+      "min_ms": 12.1733,
+      "samples": 3
+    },
+    "phase6_local_package_creation_ms": {
+      "max_ms": 6.525,
+      "mean_ms": 6.525,
+      "measurements_ms": [
+        6.525
+      ],
+      "min_ms": 6.525,
+      "samples": 1
+    },
+    "reobservation_decision_ms": {
+      "max_ms": 0.0172,
+      "mean_ms": 0.0172,
+      "measurements_ms": [
+        0.0172
+      ],
+      "min_ms": 0.0172,
+      "samples": 1
+    },
+    "temporal_evaluation_ms": {
+      "max_ms": 13.9498,
+      "mean_ms": 5.1263,
+      "measurements_ms": [
+        0.0158,
+        0.0329,
+        13.9498,
+        6.5067
+      ],
+      "min_ms": 0.0158,
+      "samples": 4
+    }
+  }
+}

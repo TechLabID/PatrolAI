@@ -1,0 +1,34 @@
+{
+    "schema_version": 1,
+    "observation_id": "obs_583f270b8e5a4465ab668f223a4a62db",
+    "camera_id": "VG_CCTV_01",
+    "timestamp": "2026-09-27T05:32:34.1777284Z",
+    "source_type": "unity",
+    "frame": "obs_583f270b8e5a4465ab668f223a4a62db.png",
+    "frame_sha256": "e7a9f3e634c07da60fbf3cf8509840fa65a6127646b6243e31967c9324bad343",
+    "width": 1280,
+    "height": 720,
+    "camera_pose": {
+        "position": [
+            -0.4000000059604645,
+            2.200000047683716,
+            5.269999980926514
+        ],
+        "rotation_xyzw": [
+            0.0,
+            -0.7071068286895752,
+            0.0,
+            0.7071068286895752
+        ]
+    },
+    "metadata": {
+        "target_id": "SWG_05/Indicator_03",
+        "roi": [
+            604,
+            324,
+            72,
+            72
+        ],
+        "provenance": "unity_render"
+    }
+}

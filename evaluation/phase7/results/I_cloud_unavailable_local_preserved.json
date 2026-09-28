@@ -1,0 +1,23 @@
+{
+  "category": "cloud_local_first",
+  "ground_truth": {
+    "category": "cloud_local_first",
+    "expected_duplicate_cloud_incident_count": 0,
+    "expected_local_evidence_preserved": true,
+    "expected_sync_state": "SYNC_FAILED",
+    "id": "I_cloud_unavailable_local_preserved",
+    "target_id": "SWG_05/Indicator_03"
+  },
+  "id": "I_cloud_unavailable_local_preserved",
+  "observed": {
+    "deterministic_package_hash_consistency": true,
+    "duplicate_cloud_incident_count": 0,
+    "failure_reason": "simulated_cloud_unavailable",
+    "latency_ms": 6.525,
+    "local_evidence_preserved": true,
+    "package_generation_success": true,
+    "package_sha256": "6b66e2eefb1ba78a72049b68b2eca4cb8e3ffaa6cb73958673b7d4614e62da9f",
+    "sync_state": "SYNC_FAILED"
+  },
+  "passed": true
+}
