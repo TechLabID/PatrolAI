@@ -14,7 +14,7 @@ namespace PatrolAI.Nebius
     /// Isolated Nebius Token Factory connectivity client. It is not connected to
     /// perception, decisions, movement, scenes, controllers, or UI.
     /// </summary>
-    public sealed class NebiusClient : IDisposable
+    public sealed partial class NebiusClient : IDisposable
     {
         private const string ModelsEndpoint = "v1/models";
 

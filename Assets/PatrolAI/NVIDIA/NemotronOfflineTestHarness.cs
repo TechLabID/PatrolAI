@@ -17,6 +17,8 @@ namespace PatrolAI.NVIDIA
             Run("valid SAFE response", TestValidSafe, passed);
             Run("valid WARNING response", TestValidWarning, passed);
             Run("valid DANGER response", TestValidDanger, passed);
+            Run("JSON code fence response", TestJsonCodeFence, passed);
+            Run("surrounding prose rejected", TestSurroundingProseRejected, passed);
             Run("malformed JSON", TestMalformedJson, passed);
             Run("unsupported risk level", TestUnsupportedRisk, passed);
             Run("unsupported action", TestUnsupportedAction, passed);
@@ -31,7 +33,7 @@ namespace PatrolAI.NVIDIA
                 report.AppendLine("PASS: " + testName);
             }
 
-            report.Append("SUMMARY: ").Append(passed.Count).Append("/10 PASS");
+            report.Append("SUMMARY: ").Append(passed.Count).Append("/12 PASS");
             return report.ToString();
         }
 
@@ -60,6 +62,27 @@ namespace PatrolAI.NVIDIA
                 + "\"reason\":\"Immediate unsafe condition.\","
                 + "\"requiresReobservation\":false,\"confidence\":0.99}");
             AssertDecision(decision, "DANGER", "STOP", false);
+        }
+
+        private static void TestJsonCodeFence()
+        {
+            PatrolDecision decision = ParseAndValidate(
+                "```json\n{\"riskLevel\":\"WARNING\",\"action\":\"INSPECT\"," 
+                + "\"reason\":\"Inspect red indicator.\"," 
+                + "\"requiresReobservation\":false,\"confidence\":0.9}\n```");
+            AssertDecision(decision, "WARNING", "INSPECT", false);
+        }
+
+        private static void TestSurroundingProseRejected()
+        {
+            bool parsed = NemotronDecisionParser.TryParse(
+                "Decision: {\"riskLevel\":\"DANGER\",\"action\":\"STOP\"," 
+                + "\"reason\":\"Red indicator.\",\"requiresReobservation\":false," 
+                + "\"confidence\":0.9}",
+                out NemotronReasoningResponse response,
+                out string errorMessage);
+            Assert(!parsed && response == null && !string.IsNullOrWhiteSpace(errorMessage),
+                "Surrounding prose must be rejected.");
         }
 
         private static void TestMalformedJson()

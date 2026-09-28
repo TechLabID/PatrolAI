@@ -76,17 +76,31 @@ namespace PatrolAI.NVIDIA
             errorMessage = string.Empty;
 
             string trimmed = modelOutput.Trim();
-            int firstBrace = trimmed.IndexOf('{');
-            int lastBrace = trimmed.LastIndexOf('}');
-
-            if (firstBrace < 0 || lastBrace <= firstBrace)
+            if (trimmed.StartsWith("{", StringComparison.Ordinal)
+                && trimmed.EndsWith("}", StringComparison.Ordinal))
             {
-                errorMessage = "Nemotron output does not contain a complete JSON object.";
-                return false;
+                json = trimmed;
+                return true;
             }
 
-            json = trimmed.Substring(firstBrace, lastBrace - firstBrace + 1);
-            return true;
+            const string JsonFence = "```json";
+            const string FenceEnd = "```";
+            if (trimmed.StartsWith(JsonFence, StringComparison.OrdinalIgnoreCase)
+                && trimmed.EndsWith(FenceEnd, StringComparison.Ordinal))
+            {
+                string fencedJson = trimmed.Substring(
+                    JsonFence.Length,
+                    trimmed.Length - JsonFence.Length - FenceEnd.Length).Trim();
+                if (fencedJson.StartsWith("{", StringComparison.Ordinal)
+                    && fencedJson.EndsWith("}", StringComparison.Ordinal))
+                {
+                    json = fencedJson;
+                    return true;
+                }
+            }
+
+            errorMessage = "Nemotron output must be a JSON object with no surrounding prose.";
+            return false;
         }
 
         private static bool TryNormalizeRiskLevel(string value, out string normalized)

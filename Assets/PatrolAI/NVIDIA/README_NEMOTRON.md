@@ -58,3 +58,29 @@ Only a later authenticated and evidenced Token Factory request may support a liv
 ## Targeted Offline Tests
 
 `NemotronOfflineTestHarness` covers valid SAFE, WARNING, and DANGER responses; malformed JSON; unsupported risk and action values; missing fields; out-of-range confidence; insufficient evidence fallback; and deterministic mock reasoning. The harness uses no third-party test package and performs no network or Unity scene operation.
+
+## Phase 3 — Live Reasoning Adapter
+
+Phase 3 adds an explicit live reasoning path through Nebius Token Factory using exactly:
+
+```text
+nvidia/Nemotron-3_5-Lightning
+```
+
+The runtime path is:
+
+```text
+PatrolObservation
+    → NebiusNemotronReasoningService
+    → Nebius Token Factory /v1/chat/completions
+    → NVIDIA Nemotron 3.5 Lightning
+    → NemotronDecisionParser
+    → NemotronDecisionValidator
+    → PatrolDecision
+```
+
+The live adapter requires `NEBIUS_API_KEY` in the calling process environment. It never logs or serializes the key or Authorization header. The request uses a low temperature, a compact observation-only payload, JSON-only instructions, and a small output-token limit. The manual harness sends at most one request per invocation and never runs automatically.
+
+Model output remains untrusted. A successful HTTP response must still produce non-empty choice content, parse successfully, and pass validation or safe normalization. Failure at any stage returns `UNKNOWN / REOBSERVE` with no movement, alert, scene, controller, OpenCV, or UI effect.
+
+`MockNemotronReasoningService` remains **OFFLINE TEST ONLY**. `NebiusNemotronReasoningService` is the only Phase 3 live provider, and a live-inference claim requires an evidenced successful request. Current repository status: the adapter is implemented; live inference validation must be recorded separately when `NEBIUS_API_KEY` is available to the executing process.
