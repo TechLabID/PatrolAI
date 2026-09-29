@@ -407,6 +407,116 @@ Competition requirements take priority only when a change is explicitly requeste
 
 ---
 
+## Runtime Truthfulness Rule
+
+PatrolAI competition development must preserve strict truthfulness about runtime execution.
+
+### Runtime Status Definitions
+
+Use the following status labels consistently:
+
+- `REAL`
+  - A genuine runtime call was made to Nebius Token Factory and/or Nebius AI Cloud.
+  - The configured NVIDIA model actually processed the request and returned the response used by PatrolAI.
+
+- `MOCK`
+  - Output was produced by a local mock/test implementation.
+  - No live Nebius/NVIDIA inference occurred.
+
+- `FALLBACK`
+  - The intended live runtime path failed or was unavailable.
+  - PatrolAI used an explicitly defined fallback path instead.
+
+- `LOCAL SAMPLE`
+  - Output was produced from local/sample/static data.
+  - No live Nebius/NVIDIA runtime call occurred.
+
+- `FAILED`
+  - The intended live operation failed and no successful real inference result was produced.
+
+### No Fake Success
+
+Never replace or conceal a failed Nebius/NVIDIA runtime call with:
+
+- hard-coded success data;
+- mock output presented as live output;
+- local sample output presented as cloud inference;
+- fallback output presented as successful NVIDIA inference;
+- prerecorded or cached output presented as a current runtime result.
+
+If a real Nebius/NVIDIA call fails, the system must clearly expose the real status:
+
+`FAILED`, `FALLBACK`, `MOCK`, or `LOCAL SAMPLE`
+
+as appropriate.
+
+Never display `REAL` unless a genuine live runtime inference succeeded.
+
+### Demo Integrity
+
+Competition screenshots, recordings, logs, README claims, Devpost descriptions, and demo videos may claim successful Nebius/NVIDIA runtime integration only when the `REAL` path actually succeeds.
+
+Mock, fallback, and local-sample paths must remain visibly and logically distinguishable from real inference.
+
+For competition evidence, prefer displaying:
+
+- runtime provider;
+- NVIDIA model ID;
+- request status;
+- response status;
+- inference mode;
+- decision result;
+- timing/latency where useful.
+
+Never expose API keys, Authorization headers, credentials, or secrets while providing runtime evidence.
+
+### Logging
+
+Where runtime status is shown, use explicit labels such as:
+
+- `RUNTIME: REAL`
+- `RUNTIME: FAILED`
+- `RUNTIME: FALLBACK`
+- `RUNTIME: MOCK`
+- `RUNTIME: LOCAL SAMPLE`
+
+Logs must reflect the actual execution path.
+
+A failed real request followed by a fallback must not be logged simply as success.
+
+Preferred representation:
+
+`NEBIUS_RUNTIME: FAILED`
+`FALLBACK_RUNTIME: LOCAL SAMPLE`
+
+or equivalent.
+
+### Competition Development Priorities
+
+For PatrolAI Nebius × NVIDIA development, prioritize:
+
+1. Prove real runtime Nebius + NVIDIA integration.
+2. Audit public-repository licenses, especially Unity assets and third-party content.
+3. Produce a reproducible Windows build.
+4. Prepare visible runtime evidence for the demo video under three minutes.
+5. Re-check the current Devpost track definition before final submission.
+6. Collect concrete Nebius/NVIDIA feedback during development.
+7. Preserve Git history and tags demonstrating significant updates made during the hackathon period.
+
+### Enforcement
+
+Coding agents must never silently downgrade a requested live integration to mock, fallback, or local sample.
+
+If live execution is unavailable:
+
+1. report the failure;
+2. preserve the failure evidence where useful;
+3. use fallback only if explicitly implemented;
+4. label fallback truthfully;
+5. do not claim the competition runtime requirement has passed.
+
+**Competition runtime PASS requires a demonstrable `REAL` Nebius/NVIDIA execution path.**
+
 ## Significant Update Rule
 
 PatrolAI originated from an existing stable system.
