@@ -339,17 +339,17 @@ Final internal target:
 Do not submit until all items below are PASS:
 
 ```text
-[ ] Nebius live connectivity PASS
+[x] Nebius live connectivity PASS
 [x] NVIDIA model runtime use PASS
 [x] Physical AI closed loop PASS
 [x] Demo scenarios PASS
 [ ] Public repo ready
-[ ] LICENSE present
-[ ] README complete
-[ ] Secret scan PASS
+[x] LICENSE present
+[x] README complete
+[x] Secret scan PASS
 [ ] YouTube demo public
 [ ] Devpost description complete
-[ ] Significant-update statement complete
+[x] Significant-update statement complete
 [ ] Feedback complete
 [ ] Final Git tag created
 ```
