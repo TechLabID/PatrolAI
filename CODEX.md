@@ -590,4 +590,582 @@ Do not start later phases automatically.
 
 ---
 
-**RF90: Protect validated assets and behavior. PatrolAI competition development must remain additive, minimal, regression-safe, token-efficient, and demonstrably integrated with Nebius and NVIDIA.**
+## Third-Party Asset / Mixamo Publication Rule
+
+Before any public GitHub release or hackathon submission:
+
+1. Run a third-party asset/IP scan.
+2. Adobe Mixamo may be used locally in Unity and in finished End Uses
+   such as Windows builds, APKs, demos, screenshots, and videos.
+3. Do NOT publish raw/reusable Mixamo content in the public repository,
+   including:
+   - Mixamo FBX animation files
+   - Mixamo character files
+   - Extracted/reusable animation clips derived from Mixamo
+4. Keep Mixamo assets in:
+   Assets/ThirdParty/Mixamo/
+5. Exclude that directory from the public repository via `.gitignore`.
+6. Document the Mixamo dependency/credit in README when applicable.
+7. Before submission/publication, verify that no restricted third-party
+   raw assets are present in Git history, Releases, or downloadable ZIPs.
+8. Finished application builds may contain Mixamo as part of the End Use,
+   subject to the applicable Adobe/Mixamo terms.
+
+Never remove working local Mixamo assets merely to make the repository
+public; separate the distributable source from restricted third-party assets.
+
+## Token Efficiency & Execution Rule
+
+For every task:
+
+1. Use the minimum context, explanation, and output necessary to complete the task correctly.
+2. Do not repeat project rules already defined in this `CODEX.md`.
+3. Treat rules in this file as persistent and authoritative unless the user explicitly overrides them.
+4. Focus each session prompt only on:
+   - current task,
+   - required changes,
+   - acceptance criteria.
+5. Do not restate known project history unless required for implementation.
+6. Preserve stable features and approved baselines.
+7. Prefer additive changes over redesign or refactoring.
+8. Do not modify unrelated files.
+9. Perform only the validation necessary to establish correctness and prevent regression.
+10. Final reporting should be concise:
+    - PASS
+    - FAIL
+    - NOT VERIFIED
+11. Never claim PASS for anything not actually verified.
+12. If a requirement conflicts with a higher-priority project rule, preserve the higher-priority rule and use the safest valid alternative.
+13. Avoid unnecessary exploration, repeated file reads, repeated searches, verbose reasoning, and duplicate validation.
+14. Stop when all acceptance criteria are satisfied. Do not continue adding improvements that were not requested.
+
+
+### Priority Order
+
+1. Safety, license, IP, and platform rules
+2. Existing project-specific non-negotiable rules
+3. Preserve stable / approved baseline
+4. Current task requirements
+5. Acceptance criteria
+6. Optional cleanup or optimization
+
+### Core Principle
+
+**Minimum necessary work, minimum necessary tokens, maximum correctness.**
+
+
+
+
+# WINNER-LEVEL PROJECT RULE
+
+Version: 1.0  
+Scope: Default rule for all projects unless explicitly overridden by project-specific instructions.
+
+---
+
+## 1. Core Principle
+
+Do not build a project merely to function, qualify, or be submitted.
+
+Build it from the beginning so it can produce **credible, measurable, winner-level evidence**.
+
+Use this working formula:
+
+**Important Problem × AI Necessity × Autonomous Action × Real Evidence × Measurable Impact × Excellent Demo**
+
+If one factor is weak, the overall project becomes weaker.
+
+---
+
+## 2. Six Questions Before Major Coding
+
+Before large implementation work begins, answer these six questions:
+
+1. **What important real-world problem is being solved?**
+2. **Who specifically experiences the problem?**
+3. **Why is AI necessary to the core solution rather than decorative?**
+4. **What does the system autonomously sense, understand, decide, act on, observe, or improve?**
+5. **Which measurable metrics will prove that the solution works?**
+6. **What single demo moment will let judges, users, researchers, or stakeholders understand the value quickly?**
+
+If these six answers are unclear, improve the project concept before adding major features.
+
+---
+
+## 3. AI Must Be Load-Bearing
+
+If the project uses AI, AI should perform an essential role.
+
+Avoid:
+
+**Input → Prompt → LLM → Text Output**
+
+when the project can support a stronger AI-native workflow.
+
+Prefer, when appropriate:
+
+**Sense → Understand → Decide → Act → Observe Result → Learn / Repeat**
+
+AI should meaningfully contribute to one or more of the following:
+
+- perception
+- reasoning
+- prediction
+- adaptation
+- planning
+- decision making
+- autonomous action
+- personalization
+- optimization
+- re-observation
+- feedback
+- continuous improvement
+
+If removing AI does not materially affect the core product, reconsider the AI role.
+
+---
+
+## 4. Start From the Problem, Not the Technology
+
+Do not begin with:
+
+> We want to use AI, Unity, OpenCV, NVIDIA, Gemini, LLM, drone, robot, or another technology.
+
+Begin with:
+
+> A specific group has a specific problem that causes measurable cost, delay, risk, inefficiency, or lost opportunity.
+
+Then select the minimum technologies required to solve it well.
+
+Technology must support the problem, not define the problem.
+
+---
+
+## 5. Define Success Metrics Early
+
+Before large-scale implementation, define measurable success criteria.
+
+Possible metrics include:
+
+- accuracy
+- precision / recall
+- response time
+- task completion rate
+- reliability
+- energy consumption
+- cost reduction
+- time reduction
+- throughput improvement
+- queue reduction
+- learning gain
+- mastery improvement
+- intervention success
+- failure recovery
+- user adoption
+- retention
+- active users
+- transactions
+- pilot users
+- deployment count
+- runtime AI calls
+- autonomous decisions
+- successful missions
+- incident prevention
+- before-vs-after improvement
+
+Use metrics appropriate to the project.
+
+Do not invent numbers.
+
+---
+
+## 6. Evidence Is Mandatory
+
+Strong projects must produce verifiable evidence.
+
+Examples:
+
+- automated tests
+- benchmark results
+- experiment logs
+- runtime logs
+- screenshots
+- videos
+- real API calls
+- model responses
+- telemetry
+- user testing
+- pilot deployment
+- usage statistics
+- transaction records
+- before/after measurements
+- reproducible evaluation
+- Git commits and tags
+- deployment evidence
+
+Always distinguish clearly between:
+
+- **REAL**
+- **SIMULATED**
+- **MOCK**
+- **FALLBACK**
+- **LOCAL SAMPLE**
+- **NOT VERIFIED**
+
+Never present simulated, mocked, or unverified behavior as real.
+
+---
+
+## 7. Measure Impact, Not Only Technical Performance
+
+A technically successful system is not automatically impactful.
+
+Where possible, measure:
+
+**Before → After**
+
+or:
+
+**Baseline → Proposed System**
+
+Examples:
+
+- congestion queue before vs after intervention
+- learning score before vs after adaptive tutoring
+- inspection time before vs after automation
+- energy usage before vs after optimization
+- error rate before vs after AI assistance
+- incident response time before vs after agentic monitoring
+
+The project should answer:
+
+> What changed because this system exists?
+
+---
+
+## 8. Prefer Autonomous Closed Loops
+
+When appropriate, design the system as a closed loop.
+
+Recommended pattern:
+
+**Perceive  
+→ Build State  
+→ Reason  
+→ Decide  
+→ Act  
+→ Re-observe  
+→ Evaluate Result  
+→ Update State / Memory  
+→ Continue**
+
+This is stronger than a one-shot AI response because the system can verify whether its action actually worked.
+
+---
+
+## 9. Design the Demo Early
+
+A strong project should have one memorable demonstration.
+
+The core value should be understandable quickly.
+
+Recommended demo structure:
+
+**Problem  
+→ System detects the situation  
+→ AI decides  
+→ System acts  
+→ Result changes  
+→ Evidence appears**
+
+Avoid demos dominated by:
+
+- long setup
+- excessive menus
+- architecture explanations
+- static slides
+- hidden AI behavior
+- manual intervention that looks autonomous
+
+The most important behavior should be visible.
+
+---
+
+## 10. Product Before Feature Expansion
+
+After the core engineering works, prioritize:
+
+**Product Validation  
+→ Real Testing  
+→ Evidence  
+→ Measurable Impact  
+→ User Experience  
+→ Demo Quality  
+→ Submission / Delivery Clarity**
+
+before unnecessary feature expansion.
+
+Do not keep adding features just because they are technically possible.
+
+Every new feature should answer at least one of these:
+
+- Does it solve an important problem?
+- Does it improve a defined metric?
+- Does it strengthen evidence?
+- Does it improve reliability?
+- Does it strengthen the demo?
+- Does it strengthen real-world usability?
+
+If not, defer it.
+
+---
+
+## 11. Minimum Necessary Complexity
+
+Use the simplest architecture that can achieve winner-level performance and evidence.
+
+Avoid unnecessary:
+
+- services
+- models
+- agents
+- frameworks
+- cloud components
+- UI panels
+- integrations
+- abstractions
+- dependencies
+
+More technology does not automatically mean a stronger project.
+
+Complexity must earn its place.
+
+---
+
+## 12. Preserve Stable Baselines
+
+Once a feature, scene, architecture, workflow, or visual baseline is approved and stable:
+
+- do not redesign it without a clear reason
+- prefer additive changes
+- isolate new features
+- avoid unrelated edits
+- protect known-good behavior
+- keep regression validation focused on affected areas
+
+Stable approved systems should remain stable unless explicitly changed.
+
+---
+
+## 13. RF90 Compatibility
+
+For visual or spatial projects using RF90:
+
+- use the target reference as the visual goal
+- achieve static similarity first
+- do not add animation, gameplay, simulation, or autonomous behavior before static approval when RF90 requires it
+- preserve approved visual assets and scenes
+- build new functionality additively after **PASS_STATIC / USER_APPROVED_STATIC**
+
+Winner-level functionality must not destroy an approved visual baseline.
+
+---
+
+## 14. Testing Rule
+
+Test what is necessary to prove the current change.
+
+Prefer:
+
+- targeted tests
+- regression tests for affected core behavior
+- runtime validation
+- evidence-producing tests
+
+Avoid unnecessary full-suite testing when the change does not require it.
+
+Always report truthfully:
+
+- PASS
+- FAIL
+- NOT VERIFIED
+
+Never claim success without evidence.
+
+---
+
+## 15. Runtime Truthfulness
+
+Any integration described as real must actually run.
+
+Examples:
+
+If the project claims:
+
+- Nebius runtime
+- NVIDIA model runtime
+- Gemini runtime
+- OpenAI runtime
+- AWS runtime
+- physical hardware
+- drone integration
+- live sensor input
+- external API integration
+
+then the demo and logs must clearly show whether it is:
+
+**REAL, MOCK, FALLBACK, LOCAL SAMPLE, FAILED, or NOT VERIFIED.**
+
+Never replace a failed real integration with a fake success.
+
+---
+
+## 16. User and Market Evidence
+
+When relevant, strengthen the project with real-world validation such as:
+
+- user interviews
+- pilot users
+- test users
+- organizations
+- schools
+- businesses
+- domain experts
+- adoption
+- usage
+- retention
+- transactions
+- letters of interest
+- feedback
+- deployment trials
+
+A small amount of real evidence can be stronger than many hypothetical claims.
+
+---
+
+## 17. Research Projects
+
+For academic or thesis projects, winner-level does not mean commercial hype.
+
+Use the same principles with research evidence:
+
+**Research Problem  
+→ Hypothesis  
+→ Method  
+→ System  
+→ Experiment  
+→ Metrics  
+→ Results  
+→ Limitations  
+→ Reproducibility**
+
+Strong research projects should produce defensible evidence, not only impressive demos.
+
+---
+
+## 18. Competition / Hackathon Projects
+
+For competitions, optimize for:
+
+- rule compliance
+- clear problem
+- AI necessity
+- working implementation
+- real runtime evidence
+- measurable impact
+- originality
+- usability
+- reproducibility
+- strong documentation
+- clear architecture
+- polished demo
+- credible claims
+
+Read the competition rules before major development.
+
+Do not assume judges reward technical complexity alone.
+
+---
+
+## 19. IP, Security, and Compliance
+
+Winner-level quality includes compliance.
+
+Before public release or submission:
+
+- check third-party licenses
+- remove restricted assets from public repositories
+- protect API keys and credentials
+- verify dataset permissions
+- verify model licenses
+- verify competition requirements
+- verify repository visibility requirements
+- verify required disclosures
+- verify attribution
+- verify privacy implications
+
+A technically excellent project can fail because of compliance mistakes.
+
+---
+
+## 20. Token and Development Efficiency
+
+For AI coding agents and development assistants:
+
+- read project rules first
+- use minimum necessary context
+- make minimum necessary edits
+- avoid unrelated exploration
+- preserve stable code
+- prefer additive implementation
+- run only necessary validation
+- stop when acceptance criteria are satisfied
+- report concise evidence
+
+The goal is:
+
+**Best practical result with optimal token and engineering efficiency.**
+
+---
+
+## 21. Required Project Decision Gate
+
+Before moving from concept to major development, confirm that the project has:
+
+- [ ] Important problem
+- [ ] Clear target user
+- [ ] Strong solution hypothesis
+- [ ] Necessary role for AI
+- [ ] Autonomous or adaptive behavior where relevant
+- [ ] Defined metrics
+- [ ] Evidence plan
+- [ ] Impact measurement plan
+- [ ] Demo moment
+- [ ] Validation plan
+- [ ] IP / security plan
+- [ ] Clear acceptance criteria
+
+If several items are missing, improve the concept first.
+
+---
+
+## 22. Final Rule
+
+**Do not optimize for “finished.”**
+
+Optimize for:
+
+**Useful  
+→ Working  
+→ Verified  
+→ Measurable  
+→ Credible  
+→ Memorable  
+→ Winner-Level**
+
+Build the project so that its strongest claims can be demonstrated with evidence.
+
+
+## Final Rule
+
+**RF90: Protect validated assets and behavior. PatrolAI competition development must remain additive, minimal, regression-safe, token-efficient, evidence-driven, and demonstrably integrated with Nebius Token Factory / Nebius AI Cloud and NVIDIA open-source models before those integrations are claimed as REAL.**
