@@ -341,7 +341,7 @@ Do not submit until all items below are PASS:
 ```text
 [ ] Nebius live connectivity PASS
 [x] NVIDIA model runtime use PASS
-[ ] Physical AI closed loop PASS
+[x] Physical AI closed loop PASS
 [ ] Demo scenarios PASS
 [ ] Public repo ready
 [ ] LICENSE present
