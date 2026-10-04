@@ -37,11 +37,23 @@ namespace PatrolAI.Scenarios
                 TestReobservingStateWhileInspectionRuns, passed);
             Run("agentic inspection failure is reported truthfully",
                 TestAgenticFailureVisible, passed);
+            Run("selecting Agentic displays Agentic fields only",
+                TestAgenticDetailSelection, passed);
+            Run("selecting Fusion replaces Agentic display",
+                TestFusionReplacesAgentic, passed);
+            Run("selecting Evaluate replaces Fusion display",
+                TestEvaluateReplacesFusion, passed);
+            Run("runtime state is read from actual controller state",
+                TestRuntimeStateDisplay, passed);
+            Run("FAILED cannot display as COMPLETE", TestFailureCannotComplete, passed);
+            Run("Phase 5C adapter still delegates only", TestDelegationOnly, passed);
+            Run("existing A/B/C demo UI remains unaffected",
+                TestScenarioUiSurfaceUnchanged, passed);
 
             var report = new StringBuilder();
             foreach (string name in passed)
                 report.AppendLine("PASS: " + name);
-            report.Append("SUMMARY: ").Append(passed.Count).Append("/15 PASS");
+            report.Append("SUMMARY: ").Append(passed.Count).Append("/22 PASS");
             return report.ToString();
         }
 
@@ -196,6 +208,72 @@ namespace PatrolAI.Scenarios
                 "A physical workflow failure must not falsify the completed reasoning mode.");
             Assert(state.Detail.Contains("FAILED"),
                 "Physical workflow failure must be visible.");
+        }
+
+        private static void TestAgenticDetailSelection()
+        {
+            var detail = new PatrolBaselineWorkflowDetailState();
+            detail.Select(PatrolBaselineAction.AgenticInspection);
+            Assert(detail.Title == "AGENTIC INSPECTION", "Agentic title mismatch.");
+            Assert(Array.IndexOf(detail.FieldLabels, "ACTIVE PHASE") >= 0,
+                "Agentic fields missing.");
+            Assert(Array.IndexOf(detail.FieldLabels, "FUSION STATUS") < 0,
+                "Fusion fields leaked into Agentic display.");
+        }
+
+        private static void TestFusionReplacesAgentic()
+        {
+            var detail = new PatrolBaselineWorkflowDetailState();
+            detail.Select(PatrolBaselineAction.AgenticInspection);
+            detail.Select(PatrolBaselineAction.MultiSourceFusion);
+            Assert(detail.Title == "MULTI SOURCE FUSION", "Fusion did not replace Agentic.");
+            Assert(Array.IndexOf(detail.FieldLabels, "FUSION STATUS") >= 0,
+                "Fusion fields missing.");
+            Assert(Array.IndexOf(detail.FieldLabels, "TEMPORAL STATUS") < 0,
+                "Temporal fields leaked into Fusion display.");
+        }
+
+        private static void TestEvaluateReplacesFusion()
+        {
+            var detail = new PatrolBaselineWorkflowDetailState();
+            detail.Select(PatrolBaselineAction.MultiSourceFusion);
+            detail.Select(PatrolBaselineAction.LatestVerifiedFusion);
+            Assert(detail.Title == "LATEST VERIFIED FUSION",
+                "Evaluate did not replace Fusion.");
+            Assert(Array.IndexOf(detail.FieldLabels, "TEMPORAL STATUS") >= 0,
+                "Evaluate fields missing.");
+            Assert(Array.IndexOf(detail.FieldLabels, "FUSION STATUS") < 0,
+                "Fusion fields remained visible after Evaluate selection.");
+        }
+
+        private static void TestRuntimeStateDisplay()
+        {
+            Assert(PatrolBaselineActionAdapter.DisplayState(
+                true, "CAPTURE_CCTV_EVIDENCE", "RUNNING") == "RUNNING",
+                "Running controller was not displayed as RUNNING.");
+            Assert(PatrolBaselineActionAdapter.DisplayState(
+                false, "COMPLETE", "COMPLETE") == "COMPLETE",
+                "Completed controller state was not displayed.");
+        }
+
+        private static void TestFailureCannotComplete()
+        {
+            Assert(PatrolBaselineActionAdapter.DisplayState(
+                false, "COMPLETE", "FAILED — CONTROLLER FAILED") == "FAILED",
+                "Failed workflow was incorrectly displayed as COMPLETE.");
+        }
+
+        private static void TestScenarioUiSurfaceUnchanged()
+        {
+            Type runner = typeof(PatrolDemoScenarioRunner);
+            Assert(PublicMethod(runner, "RunSafeScenario"), "Scenario A UI action missing.");
+            Assert(PublicMethod(runner, "RunInsufficientEvidenceScenario"),
+                "Scenario B UI action missing.");
+            Assert(PublicMethod(runner, "RunHazardScenario"), "Scenario C UI action missing.");
+            Assert(PatrolDemoScenario.Safe().scenarioId == "A"
+                && PatrolDemoScenario.InsufficientEvidence().scenarioId == "B"
+                && PatrolDemoScenario.Hazard().scenarioId == "C",
+                "Scenario identities changed.");
         }
 
         private static bool PublicMethod(Type type, string name)

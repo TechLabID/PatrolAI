@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.IO;
 using UnityEngine;
 using VisionGuard.Phase3;
 using VisionGuard.Phase4;
@@ -28,6 +29,55 @@ namespace PatrolAI.Competition
         public string AgenticStatus { get; private set; } = "IDLE";
         public string FusionStatus { get; private set; } = "IDLE";
         public string TemporalStatus { get; private set; } = "IDLE";
+        public bool HasActiveAction { get; private set; }
+        public PatrolBaselineAction ActiveAction { get; private set; }
+
+        public string AgenticDisplayState => DisplayState(
+            agenticController != null && agenticController.IsRunning,
+            AgenticControllerState, AgenticStatus);
+        public string AgenticControllerState => ValueOrUnavailable(
+            agenticController == null ? null : agenticController.State);
+
+        public string FusionDisplayState => DisplayState(
+            fusionController != null && fusionController.IsRunning,
+            FusionControllerState, FusionStatus);
+        public string FusionControllerState => ValueOrUnavailable(
+            fusionController == null ? null : fusionController.State);
+        public string FusionResultStatus => ValueOrUnavailable(
+            fusionController == null ? null : fusionController.FusionStatus);
+        public string FusionVerification => ValueOrUnavailable(
+            fusionController == null ? null : fusionController.Verification);
+        public string FusionAction => ValueOrUnavailable(
+            fusionController == null ? null : fusionController.Action);
+        public string FusionFinalCondition => ValueOrUnavailable(
+            fusionController == null ? null : fusionController.FinalCondition);
+        public string FusionReason => ValueOrUnavailable(
+            fusionController == null ? null : fusionController.Reason);
+        public string FusionResult => ShortResult(
+            fusionController == null ? null : fusionController.ResultPath);
+
+        public string TemporalDisplayState => DisplayState(
+            temporalController != null && temporalController.IsRunning,
+            TemporalControllerState, TemporalStatus);
+        public string TemporalControllerState => ValueOrUnavailable(
+            temporalController == null ? null : temporalController.State);
+        public string TemporalOutcome => ValueOrUnavailable(
+            temporalController == null ? null : temporalController.Outcome);
+        public string TemporalPreviousCondition => ValueOrUnavailable(
+            temporalController == null ? null : temporalController.PreviousCondition);
+        public string TemporalCurrentCondition => ValueOrUnavailable(
+            temporalController == null ? null : temporalController.CurrentCondition);
+        public string TemporalEvaluationRun => temporalController == null
+            ? "UNAVAILABLE"
+            : temporalController.EvaluationRun.ToString();
+        public string TemporalChangeId => ValueOrUnavailable(
+            temporalController == null ? null : temporalController.ChangeId);
+        public string TemporalIncidentId => ValueOrUnavailable(
+            temporalController == null ? null : temporalController.IncidentId);
+        public string TemporalReason => ValueOrUnavailable(
+            temporalController == null ? null : temporalController.Reason);
+        public string TemporalResult => ShortResult(
+            temporalController == null ? null : temporalController.ResultPath);
 
         public bool ResolveControllers()
         {
@@ -43,6 +93,7 @@ namespace PatrolAI.Competition
 
         public void RunAgenticInspection()
         {
+            Select(PatrolBaselineAction.AgenticInspection);
             ResolveControllers();
             if (agenticController == null)
             {
@@ -60,6 +111,7 @@ namespace PatrolAI.Competition
 
         public void RunMultiSourceFusion()
         {
+            Select(PatrolBaselineAction.MultiSourceFusion);
             ResolveControllers();
             if (fusionController == null)
             {
@@ -77,6 +129,7 @@ namespace PatrolAI.Competition
 
         public void EvaluateLatestVerifiedFusion()
         {
+            Select(PatrolBaselineAction.LatestVerifiedFusion);
             ResolveControllers();
             if (temporalController == null)
             {
@@ -116,6 +169,20 @@ namespace PatrolAI.Competition
             }
         }
 
+        public static string DisplayState(
+            bool isRunning,
+            string controllerState,
+            string workflowStatus)
+        {
+            if ((workflowStatus ?? string.Empty).StartsWith(
+                "FAILED", StringComparison.Ordinal))
+                return "FAILED";
+            if (isRunning || string.Equals(
+                workflowStatus, "RUNNING", StringComparison.Ordinal))
+                return "RUNNING";
+            return ValueOrUnavailable(controllerState);
+        }
+
         private IEnumerator ObserveAgenticCompletion()
         {
             yield return null;
@@ -138,6 +205,27 @@ namespace PatrolAI.Competition
 
         private static void NoOp()
         {
+        }
+
+        private void Select(PatrolBaselineAction action)
+        {
+            ActiveAction = action;
+            HasActiveAction = true;
+        }
+
+        private static string ValueOrUnavailable(string value)
+        {
+            return string.IsNullOrWhiteSpace(value) || value == "—"
+                ? "UNAVAILABLE"
+                : value;
+        }
+
+        private static string ShortResult(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path) || path == "—")
+                return "UNAVAILABLE";
+            string fileName = Path.GetFileName(path);
+            return string.IsNullOrWhiteSpace(fileName) ? "AVAILABLE" : fileName;
         }
     }
 }

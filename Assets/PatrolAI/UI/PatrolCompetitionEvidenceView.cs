@@ -15,6 +15,8 @@ namespace PatrolAI.UI
         private const string CompetitionScene = "VISIONGUARD_IndustrialRoom_Phase5_v01";
         private PatrolDemoScenarioRunner scenarioRunner;
         private PatrolBaselineActionAdapter baselineAdapter;
+        private readonly PatrolBaselineWorkflowDetailState workflowDetail =
+            new PatrolBaselineWorkflowDetailState();
         private GUIStyle labelStyle;
         private GUIStyle headingStyle;
 
@@ -49,6 +51,7 @@ namespace PatrolAI.UI
             EnsureStyles();
             DrawEvidencePanel(scenarioRunner.Evidence);
             DrawBaselineMenu();
+            DrawWorkflowDetailPanel();
             DrawScenarioMenu();
         }
 
@@ -128,6 +131,73 @@ namespace PatrolAI.UI
             if (GUI.Button(new Rect(left + 338f, top + 46f, 145f, 34f), "C — HAZARD"))
                 scenarioRunner.RunHazardScenario();
             GUI.enabled = true;
+        }
+
+        private void DrawWorkflowDetailPanel()
+        {
+            if (!baselineAdapter.HasActiveAction)
+                return;
+
+            if (!workflowDetail.HasSelection
+                || workflowDetail.ActiveAction != baselineAdapter.ActiveAction)
+                workflowDetail.Select(baselineAdapter.ActiveAction);
+
+            const float left = 466f;
+            float top = Screen.height - 278f;
+            float width = Mathf.Min(670f, Screen.width - left - 40f);
+            const float height = 260f;
+            GUI.Box(new Rect(left, top, width, height), string.Empty);
+            GUI.Label(new Rect(left + 16f, top + 12f, width - 32f, 26f),
+                workflowDetail.Title, headingStyle);
+
+            string[] lines = ActiveWorkflowLines();
+            for (int index = 0; index < lines.Length; index++)
+            {
+                GUI.Label(new Rect(left + 16f, top + 46f + index * 21f,
+                    width - 32f, 20f), lines[index], labelStyle);
+            }
+        }
+
+        private string[] ActiveWorkflowLines()
+        {
+            switch (workflowDetail.ActiveAction)
+            {
+                case PatrolBaselineAction.AgenticInspection:
+                    return new[]
+                    {
+                        "STATE: " + baselineAdapter.AgenticDisplayState,
+                        "ACTIVE PHASE: " + baselineAdapter.AgenticControllerState,
+                        "RESULT: " + baselineAdapter.AgenticStatus
+                    };
+                case PatrolBaselineAction.MultiSourceFusion:
+                    return new[]
+                    {
+                        "STATE: " + baselineAdapter.FusionDisplayState,
+                        "ACTIVE PHASE: " + baselineAdapter.FusionControllerState,
+                        "FUSION STATUS: " + baselineAdapter.FusionResultStatus,
+                        "VERIFICATION: " + baselineAdapter.FusionVerification,
+                        "ACTION: " + baselineAdapter.FusionAction,
+                        "FINAL CONDITION: " + baselineAdapter.FusionFinalCondition,
+                        "REASON: " + baselineAdapter.FusionReason,
+                        "RESULT: " + baselineAdapter.FusionResult
+                    };
+                case PatrolBaselineAction.LatestVerifiedFusion:
+                    return new[]
+                    {
+                        "STATE: " + baselineAdapter.TemporalDisplayState,
+                        "ACTIVE PHASE: " + baselineAdapter.TemporalControllerState,
+                        "TEMPORAL STATUS: " + baselineAdapter.TemporalOutcome,
+                        "PREVIOUS CONDITION: " + baselineAdapter.TemporalPreviousCondition,
+                        "LATEST CONDITION: " + baselineAdapter.TemporalCurrentCondition,
+                        "EVALUATION RUN: " + baselineAdapter.TemporalEvaluationRun,
+                        "CHANGE ID: " + baselineAdapter.TemporalChangeId,
+                        "INCIDENT ID: " + baselineAdapter.TemporalIncidentId,
+                        "REASON: " + baselineAdapter.TemporalReason,
+                        "RESULT: " + baselineAdapter.TemporalResult
+                    };
+                default:
+                    return new string[0];
+            }
         }
 
         private void EnsureStyles()
