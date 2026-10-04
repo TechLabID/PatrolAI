@@ -13,6 +13,24 @@ Recordings/
 .vs/
 .vscode/
 .idea/
+*.csproj
+*.sln
+*.suo
+*.user
+
+# Local credentials and private operator notes
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.pfx
+Check API Key Nebius Sudah terpasang di Powershell.md
+
+# Local-only references and restricted reusable third-party assets
+docs/references/mix/
+docs/references/PatrolAI Industrial Inspection UI Spec.png
+Assets/ThirdParty/Mixamo/
 
 # Python
 __pycache__/
@@ -28,3 +46,7 @@ exchange/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Local development rules / references
+CODEX.md
+docs/references/
