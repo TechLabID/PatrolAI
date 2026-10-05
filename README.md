@@ -99,8 +99,8 @@ The overlay keeps decision evidence visible without exposing credentials. It rep
 ```powershell
 git clone <PUBLIC_REPOSITORY_URL>
 cd PatrolAI
-py -3.12 -m venv .venv
-.\.venv\Scripts\Activate.ps1
+py -3.12 -m venv .venv-phase2
+.\.venv-phase2\Scripts\Activate.ps1
 python -m pip install -r requirements-phase2.txt
 $env:NEBIUS_API_KEY = "<YOUR_NEBIUS_API_KEY>"
 ```
@@ -125,7 +125,17 @@ Never commit a real key, `.env` file, Authorization header, screenshot containin
 4. Use Scenario A, B, or C in the PatrolAI competition panel.
 5. Confirm the evidence panel's runtime label before treating a result as live.
 
-The repository's current `EditorBuildSettings.asset` contains only `Assets/Scenes/SampleScene.unity`. A reproducible Windows competition build is therefore **NOT VERIFIED**; the competition scene must be added and a standalone build manually validated before release.
+## Build from Source on Windows
+
+1. Confirm the competition scene is enabled in Build Profiles: `Assets/VisionGuard/Phase5/Scenes/VISIONGUARD_IndustrialRoom_Phase5_v01.unity`.
+2. Build for Windows Standalone x86_64 to `Builds/Windows/PatrolAI/PatrolAI.exe`.
+3. The Editor-only post-build helper copies the required `agent/`, `vision/`, and `camera/` Python source plus `requirements-phase2.txt` beside the executable. It does not copy credentials or a Python environment.
+4. In the executable directory, create `.venv-phase2` with Python 3.12 x64 and install the copied requirements.
+5. Set `NEBIUS_API_KEY` in the process or user environment, then launch `PatrolAI.exe`.
+
+As an alternative to the executable-relative environment, advanced users may set `PATROLAI_PYTHON` to the absolute path of a compatible Python 3.12 executable with the required packages installed.
+
+The Windows executable and its runtime artifacts are intentionally excluded from the source repository. See [Windows build validation](Assets/PatrolAI/Competition/PATROLAI_WINDOWS_BUILD_VALIDATION.md) for the verified configuration and the separation between automated and manual evidence.
 
 ## Validation Evidence
 
@@ -134,8 +144,10 @@ The repository's current `EditorBuildSettings.asset` contains only `Assets/Scene
 - Phase 5 integrated targeted suite after UI/scenario work: **22/22 PASS**.
 - Phase 4 live validation: one observed HTTP 200 call produced `DANGER / STOP`, final state `STOPPED`, in 1243 ms.
 - Phase 5 live hazard validation: one observed HTTP 200 `REAL` call produced `DANGER / STOP`, final state `STOPPED`, in 1381 ms.
+- Windows Standalone x86_64 build and executable launch: **PASS**.
+- Manual standalone validation: competition UI, Agentic Inspection, Multi Source Fusion, Latest Verified Fusion, Scenario B re-observation, Scenario C `REAL / DANGER / STOP / STOPPED`, and `EXIT PATROLAI`: **PASS**.
 
-The two latency values are individual validation observations, not a benchmark, SLA, or performance average. See [the demo scenario guide](Assets/PatrolAI/Scenarios/README_DEMO_SCENARIOS.md) and the tracked files in `demo/evidence/` for available local evidence.
+The two latency values are individual validation observations, not a benchmark, SLA, or performance average. See [the demo scenario guide](Assets/PatrolAI/Scenarios/README_DEMO_SCENARIOS.md) and [Windows build validation](Assets/PatrolAI/Competition/PATROLAI_WINDOWS_BUILD_VALIDATION.md) for the documented evidence boundary.
 
 ## Significant Hackathon Updates
 
@@ -148,20 +160,20 @@ New competition work includes the PatrolAI identity and contracts, Nebius client
 - The project is a simulated Physical AI prototype; no physical hardware is claimed.
 - Cloud inference requires network access, a valid account/key, and current model availability.
 - Model output remains probabilistic and is constrained by parser, validator, and safe fallback policy.
-- Windows standalone build reproducibility is not yet verified.
-- A local diagnostic archive contains likely credential material and must be securely removed or sanitized before any public packaging.
-- Provenance/license review is still required for inherited reference/demo media.
+- Windows standalone validation proves the tested local configuration; a fresh clone still requires Unity, Python, package installation, a valid Nebius key, and network access.
+- The public source snapshot has passed the public-readiness audit; secrets, provenance-unverified media, generated files, and local-only files are excluded.
 
-**Public repository readiness: BLOCKED** until those items and the license decision below are resolved.
+**Public snapshot readiness: READY.** Repository publication is the next step; this does not mean the repository is already public.
 
 ## Third-Party Assets and Dependencies
 
 - No raw Mixamo character, FBX, or reusable animation asset is tracked in the current Git tree or found by the Phase 6 history audit. `Assets/ThirdParty/Mixamo/` is intentionally ignored and must remain local-only if used.
 - Unity packages are declared in `Packages/manifest.json`; Python packages are pinned in `requirements-phase2.txt`.
 - Synthetic test fixtures are generated by repository tools and documented as synthetic.
-- Inherited demo/reference media and the Unity template icon require provenance and license confirmation before public release.
+- Inherited demo/reference media and the Unity template icon identified by the publication audit are excluded from the public source snapshot pending any separate provenance/license confirmation.
+- Third-party components and assets remain subject to their respective licenses and are not relicensed by PatrolAI's MIT license.
 
 ## License
 
-No public open-source license has been selected or added. The copyright owner must choose and add the top-level license before publication. Until then, this repository must not be represented as open-source or public-submission ready.
+Project-owned PatrolAI source code is released under the top-level [MIT License](LICENSE), copyright (c) 2026 TechLabID. This license does not grant rights to third-party assets, packages, models, or other components governed by their own terms.
 

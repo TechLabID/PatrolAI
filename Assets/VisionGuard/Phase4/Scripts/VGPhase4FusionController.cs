@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using PatrolAI.Runtime;
 using UnityEngine;
 using VisionGuard.Phase2;
 using VisionGuard.Phase3;
@@ -156,10 +157,7 @@ namespace VisionGuard.Phase4
 
         private FusionResponse RunPython(string[] manifests)
         {
-            string root = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
-            string python = Path.Combine(root, ".venv-phase2", "Scripts", "python.exe");
-            if (!File.Exists(python))
-                throw new FileNotFoundException("Phase 2 Python environment is missing", python);
+            PatrolPythonRuntime.ResolveOrThrow(out string root, out string python);
 
             string session = "fusion_" + Guid.NewGuid().ToString("N");
             var arguments = new StringBuilder("-m agent.fusion.run --session ");

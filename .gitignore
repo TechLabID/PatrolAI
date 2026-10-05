@@ -13,6 +13,7 @@ Recordings/
 .vs/
 .vscode/
 .idea/
+.vsconfig
 *.csproj
 *.sln
 *.suo
@@ -32,12 +33,34 @@ docs/references/mix/
 docs/references/PatrolAI Industrial Inspection UI Spec.png
 Assets/ThirdParty/Mixamo/
 
+# Local RF90 review material and non-source demo evidence
+docs/Phase1A_Static_Review.md
+docs/Phase2_Baseline_Hashes.json
+docs/Phase3_Baseline_Hashes.json
+demo/evidence/
+
+# Unity starter/tutorial content not required by PatrolAI
+Assets/Readme.asset
+Assets/Readme.asset.meta
+Assets/TutorialInfo/
+Assets/TutorialInfo.meta
+Assets/Scenes/SampleScene.unity
+Assets/Scenes/SampleScene.unity.meta
+Assets/Scenes.meta
+Assets/Settings/Build Profiles/
+Assets/Settings/Build Profiles.meta
+
 # Python
 __pycache__/
 *.py[cod]
 .venv/
 .venv-*/
+venv/
 .pytest_cache/
+
+# Local validation workspaces and generated test artifacts
+.codex-*/
+tests/artifacts/
 
 # Runtime-generated VisionGuard data
 exchange/
@@ -50,3 +73,4 @@ desktop.ini
 # Local development rules / references
 CODEX.md
 docs/references/
+PATROLAI_PUBLIC_READINESS_AUDIT.md

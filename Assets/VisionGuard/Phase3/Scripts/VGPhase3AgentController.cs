@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 using System.IO;
+using PatrolAI.Runtime;
 using UnityEngine;
 using VisionGuard.Phase2;
 using Debug = UnityEngine.Debug;
@@ -151,10 +152,7 @@ namespace VisionGuard.Phase3
 
         private AgentResponse RunPython(string stage, string manifest, string reason)
         {
-            string root = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
-            string python = Path.Combine(root, ".venv-phase2", "Scripts", "python.exe");
-            if (!File.Exists(python))
-                throw new FileNotFoundException("Phase 2 Python environment is missing", python);
+            PatrolPythonRuntime.ResolveOrThrow(out string root, out string python);
             string arguments = "-m agent.run " + stage + " --session " + sessionId;
             if (!string.IsNullOrEmpty(manifest)) arguments += " --manifest " + Quote(manifest);
             if (!string.IsNullOrEmpty(reason)) arguments += " --reason " + Quote(reason);

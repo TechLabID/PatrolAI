@@ -188,15 +188,15 @@ Before making the repository public:
 - [ ] Repository contains necessary source code.
 - [ ] Required project assets are included or documented.
 - [ ] Setup instructions are complete.
-- [ ] Public open-source license is present.
-- [ ] License is visible at repository top level.
+- [x] Public open-source license is present.
+- [x] License is visible at repository top level.
 - [ ] README explains how to run PatrolAI.
 - [ ] README explains Nebius usage.
 - [ ] README explains NVIDIA model usage.
 - [ ] README explains significant hackathon updates.
 - [ ] README explains environment-variable setup.
-- [ ] No secret files are tracked.
-- [ ] No private credentials exist in Git history.
+- [x] No secret files are tracked.
+- [x] No private credentials exist in Git history.
 
 Recommended license options mentioned in the rules include:
 
@@ -206,7 +206,7 @@ Recommended license options mentioned in the rules include:
 
 Final license choice:
 
-`TBD`
+`MIT`
 
 ## 10. README Requirements
 

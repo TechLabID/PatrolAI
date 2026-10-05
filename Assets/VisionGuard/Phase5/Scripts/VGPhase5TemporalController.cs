@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using PatrolAI.Runtime;
 using UnityEngine;
 using VisionGuard.Phase4;
 using Debug = UnityEngine.Debug;
@@ -85,10 +86,7 @@ namespace VisionGuard.Phase5
 
         private static TemporalResponse RunPython(string fusionPath)
         {
-            string root = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
-            string python = Path.Combine(root, ".venv-phase2", "Scripts", "python.exe");
-            if (!File.Exists(python))
-                throw new FileNotFoundException("Phase 2 Python environment is missing", python);
+            PatrolPythonRuntime.ResolveOrThrow(out string root, out string python);
 
             var info = new ProcessStartInfo
             {

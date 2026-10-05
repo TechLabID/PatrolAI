@@ -75,7 +75,21 @@ namespace PatrolAI.UI
             DrawBaselineMenu();
             DrawWorkflowDetailPanel();
             DrawEvidencePanel(scenarioRunner.Evidence);
+            DrawExitButton();
             GUI.matrix = originalMatrix;
+        }
+
+        private void DrawExitButton()
+        {
+            if (GUI.Button(new Rect(1662f, 1014f, 240f, 48f),
+                "EXIT PATROLAI", neutralButtonStyle))
+            {
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+#else
+                Application.Quit();
+#endif
+            }
         }
 
         private void DrawHeader(PatrolCompetitionEvidenceState evidence)

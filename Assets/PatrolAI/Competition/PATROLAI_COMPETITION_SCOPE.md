@@ -17,7 +17,7 @@ These capabilities are protected and must not be presented as new hackathon-peri
 
 ## New Nebius × NVIDIA Competition Development
 
-The following items are new or planned competition-specific additions and must be tracked separately from the inherited baseline:
+The following implemented items are competition-specific additions and are tracked separately from the inherited baseline:
 
 - PatrolAI competition identity;
 - Nebius Token Factory runtime integration;
@@ -29,4 +29,4 @@ The following items are new or planned competition-specific additions and must b
 - competition-specific UI;
 - competition demo workflow.
 
-Phase 1 adds only the competition identity, architecture documentation, and isolated data contracts. All runtime integrations and behavior remain planned for later explicitly requested phases.
+The implemented competition path has validated real Nebius/NVIDIA inference, strict parsing and policy validation, safe fallback, a bounded Physical AI decision-to-action loop, deterministic A/B/C scenarios, evidence UI, and Windows standalone execution. Detailed milestone separation is recorded in `PATROLAI_SIGNIFICANT_UPDATES.md`.

@@ -8,9 +8,7 @@ PatrolAI extends a stable VisionGuardAI-derived Unity foundation with isolated c
 
 ## Physical AI Competition Objective
 
-PatrolAI targets the **Physical AI** track of the Nebius × NVIDIA Global AI Hackathon. The intended competition system will close the loop between simulated industrial sensing, perception, AI reasoning, safety decisions, and physical-agent actions.
-
-Phase 1 establishes architecture and identity only. It does not add API calls, model inference, movement changes, UI integration, or runtime behavior.
+PatrolAI targets the **Physical AI** track of the Nebius × NVIDIA Global AI Hackathon. The implemented competition system closes the loop between simulated industrial sensing, perception, AI reasoning, validated safety decisions, and bounded physical-agent actions.
 
 ## Inherited Stable Baseline
 
@@ -54,20 +52,20 @@ The core flow is:
 
 **Sense → Perceive → Reason → Decide → Act**
 
-## Future Nebius Token Factory Integration
+## Nebius Token Factory Integration
 
-A future phase will add a genuine runtime integration with Nebius Token Factory. The planned boundary will accept a structured observation derived from the existing perception output, submit the relevant safety context for inference, receive a real response, and pass validated output to the reasoning layer. Phase 1 contains no Nebius client, credentials, network calls, or simulated inference.
+`NebiusClient` and `NebiusNemotronReasoningService` submit a structured observation to the OpenAI-compatible Nebius Token Factory chat-completions endpoint. Authentication is read only from `NEBIUS_API_KEY`. Runtime results remain explicitly labeled `REAL`, `MOCK`, `FALLBACK`, `LOCAL SAMPLE`, or `FAILED`.
 
-## Future NVIDIA Nemotron Reasoning Layer
+## NVIDIA Nemotron Reasoning Layer
 
-A future phase will add NVIDIA Nemotron as a meaningful risk-reasoning layer. Nemotron is intended to interpret structured observations, assess uncertainty and risk, and produce a structured safety decision that PatrolAI can validate before any action is selected. Phase 1 contains no Nemotron integration or reasoning behavior.
+`nvidia/Nemotron-3_5-Lightning` interprets structured observations and returns a decision constrained by a strict JSON Schema. `NemotronDecisionParser` and `NemotronDecisionValidator` must both pass before a `PatrolDecision` can select `CONTINUE`, `REOBSERVE`, or `STOP`; invalid output uses the explicit safe fallback.
 
 ## Additive Development Strategy
 
-Competition work is isolated under `Assets/PatrolAI/`. New modules will be introduced as small, independently reviewable additions. Connections to inherited systems will use minimal interfaces and will be deferred until explicitly authorized by a later phase. Existing assets, scenes, scripts, namespaces, serialized components, packages, and settings remain in place.
+Competition work is isolated under `Assets/PatrolAI/`. Connections to inherited systems use narrow public entry points, including the baseline workflow adapter, rather than duplicating the inherited algorithms. Existing assets, scenes, namespaces, and serialized references remain in place except for the minimum documented standalone-runtime integration.
 
 ## Baseline and Competition Separation
 
-The inherited baseline supplies the industrial environment, OpenCV perception, mobile inspector, active re-observation, existing runtime logic, and validated UI. The new PatrolAI competition layer will supply the hackathon-specific identity, structured contracts, Nebius integration, Nemotron reasoning, Physical AI decision loop, competition scenarios, competition UI, and demo workflow.
+The inherited baseline supplies the industrial environment, OpenCV perception, mobile inspector, active re-observation, fusion/temporal workflows, and original runtime/UI foundation. The new PatrolAI competition layer supplies the hackathon-specific identity, structured contracts, Nebius integration, Nemotron reasoning, Physical AI decision loop, deterministic scenarios, evidence UI, and demo workflow.
 
 This separation is maintained so the final submission can clearly identify which capabilities existed at `v0.1-patrolai-baseline` and which significant updates were created during the hackathon period.
