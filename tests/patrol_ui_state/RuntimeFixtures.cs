@@ -44,10 +44,12 @@ namespace PatrolAI.Scenarios
     public static class PatrolReobservationEvidenceReader
     {
         public static bool Fresh;
+        public static bool Throw;
         public static string CurrentSessionId() => "offline-session";
         public static bool TryReadLatestSince(DateTime started, string session, PatrolObservation initial,
             out PatrolObservation observation, out string error)
         {
+            if (Throw) throw new InvalidOperationException("offline evidence read exception");
             observation = new PatrolObservation { detectedCondition = "UNKNOWN", evidenceStatus = "INSUFFICIENT",
                 confidence = .35f, additionalContext = "OFFLINE secondary evidence" };
             error = "missing evidence fixture";

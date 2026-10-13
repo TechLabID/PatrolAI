@@ -24,6 +24,15 @@ namespace PatrolAI.Runtime
         {
             runtimeRoot = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
 
+            ResolveOrThrow(runtimeRoot, Environment.GetEnvironmentVariable(
+                PythonOverrideEnvironmentVariable), out pythonExecutable);
+        }
+
+        // Explicit root/override inputs keep discovery deterministic and independently testable.
+        public static void ResolveOrThrow(string runtimeRoot, string configuredPython,
+            out string pythonExecutable)
+        {
+            runtimeRoot = Path.GetFullPath(runtimeRoot);
             foreach (string package in RequiredPackages)
             {
                 string packagePath = Path.Combine(runtimeRoot, package);
@@ -34,8 +43,6 @@ namespace PatrolAI.Runtime
                 }
             }
 
-            string configuredPython = Environment.GetEnvironmentVariable(
-                PythonOverrideEnvironmentVariable);
             if (!string.IsNullOrWhiteSpace(configuredPython))
             {
                 if (!Path.IsPathRooted(configuredPython))
@@ -49,13 +56,16 @@ namespace PatrolAI.Runtime
             {
                 pythonExecutable = Path.Combine(
                     runtimeRoot, ".venv-phase2", "Scripts", "python.exe");
+                if (!File.Exists(pythonExecutable))
+                    pythonExecutable = Path.Combine(runtimeRoot, ".patrolai-python", "python.exe");
             }
 
             if (!File.Exists(pythonExecutable))
             {
                 throw new FileNotFoundException(
                     "Phase 2 Python environment is missing. Create executable-relative " +
-                    ".venv-phase2 with Python 3.12 and requirements-phase2.txt, or set " +
+                    ".venv-phase2 with Python 3.12 and requirements-phase2.txt, build with the " +
+                    "validated project environment to provision .patrolai-python, or set " +
                     PythonOverrideEnvironmentVariable + " to an absolute Python executable.",
                     pythonExecutable);
             }

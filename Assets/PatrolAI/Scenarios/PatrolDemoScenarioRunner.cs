@@ -26,6 +26,11 @@ namespace PatrolAI.Scenarios
         private PatrolBaselineActionAdapter baselineAdapter;
         private DateTime reobservationStartedUtc;
         private string reobservationSessionId;
+        private PatrolConflictReservationLifetime conflictLifetime;
+        private Task conflictPendingTask;
+        private bool conflictAborted;
+        private bool conflictAsyncActive;
+        private Coroutine conflictCoroutine;
 
         private void Awake()
         {
@@ -58,27 +63,76 @@ namespace PatrolAI.Scenarios
 
         public void RunConflictingEvidenceScenario()
         {
-            if (IsRunning) return;
+            LogConflictDiagnostic("FLOW_REQUESTED");
+            if (IsRunning || conflictLifetime != null) {
+                LogConflictDiagnostic("START_BLOCKED reason=RUN_ALREADY_ACTIVE", true);
+                return;
+            }
             var scenario = PatrolConflictDemoScenario.Create();
+            PatrolConflictRunReservation reservation = null;
+            bool evidenceStorageReady = false;
             try {
                 string directory = Path.GetFullPath(Path.Combine(Application.dataPath,
                     "..", "evaluation", "results", "phase7c"));
                 Directory.CreateDirectory(directory);
-                // Reserve the only two demo calls before attempting the first one.
-                using (var stream = new FileStream(Path.Combine(directory, "demo_started.json"),
-                    FileMode.CreateNew, FileAccess.Write)) {
-                    byte[] marker = System.Text.Encoding.UTF8.GetBytes("{\"reservedRequests\":2}");
-                    stream.Write(marker, 0, marker.Length);
-                }
+                evidenceStorageReady = true;
+                LogConflictDiagnostic("RESERVATION_ACQUISITION attempted=true path="
+                    + Path.Combine(directory, "demo_started.json"));
+                reservation = PatrolConflictRunReservation.Acquire(directory);
+                conflictAborted = false;
+                conflictPendingTask = null;
+                conflictLifetime = PatrolConflictReservationLifetime.Hold(reservation,
+                    () => !conflictAsyncActive && (conflictPendingTask == null || conflictPendingTask.IsCompleted)
+                        && (baselineAdapter == null || !baselineAdapter.IsWorkflowRunning),
+                    () => { conflictLifetime = null; conflictPendingTask = null; });
+                LogConflictDiagnostic("RESERVATION_ACQUISITION result=true staleRecovered="
+                    + reservation.RecoveredStaleMarker.ToString().ToLowerInvariant());
             }
-            catch (Exception) {
+            catch (Exception exception) {
+                try { reservation?.Dispose(); }
+                catch (Exception releaseException) { LogConflictDiagnostic("RESERVATION_RELEASE_FAILED type="
+                    + releaseException.GetType().Name, true); }
+                LogConflictDiagnostic("START_GATE reservationReady=false evidenceStorageReady="
+                    + evidenceStorageReady.ToString().ToLowerInvariant(), true);
+                LogConflictDiagnostic("START_BLOCKED reason=" + exception.GetType().Name
+                    + " message=" + exception.Message, true);
                 BeginFlow(scenario.scenarioId, scenario.observation);
                 Evidence.SetReobservationFailed("CONFLICT DEMO NOT STARTED: existing run reservation or evidence storage unavailable");
                 Evidence.SetBoundedOutcome(PatrolActionMapper.Map(PatrolSafetyEnvelope.Stop(
                     "Demo reservation unavailable; conservative stop."),out bool ignored),true);
                 return;
             }
+            LogConflictDiagnostic("START_GATE reservationReady=true evidenceStorageReady=true");
+            LogConflictDiagnostic("START_ALLOWED");
             Run(scenario);
+        }
+
+        private void CompleteConflictReservation() { conflictLifetime?.Complete(); }
+        private void OnDisable() { AbortConflictRun(); }
+        private void OnDestroy() { AbortConflictRun(); }
+        private void AbortConflictRun()
+        {
+            if (conflictLifetime == null) return;
+            conflictAborted = true;
+            try {
+                if (conflictCoroutine != null) StopCoroutine(conflictCoroutine);
+                Evidence.SetReobservationFailed("CONFLICT DEMO ABORTED");
+                Evidence.SetBoundedOutcome(PatrolActionMapper.Map(PatrolSafetyEnvelope.Stop(
+                    "Conflict run aborted; conservative stop."), out bool ignored), true);
+                IsRunning = false;
+                LogConflictDiagnostic("ABORTED pending work retains reservation until settled", true);
+            }
+            finally { CompleteConflictReservation(); }
+        }
+
+        private static void LogConflictDiagnostic(string message, bool warning = false)
+        {
+            // A logging failure must not affect reservation, storage, or the safety outcome.
+            try {
+                if (warning) Debug.LogWarning("[PATROLAI-D-CONFLICT] " + message);
+                else Debug.Log("[PATROLAI-D-CONFLICT] " + message);
+            }
+            catch (Exception) { }
         }
 
         private async void Run(PatrolDemoScenario scenario)
@@ -88,14 +142,19 @@ namespace PatrolAI.Scenarios
 
             IsRunning = true;
             bool observingAgenticInspection = false;
-            BeginFlow(scenario.scenarioId, scenario.observation);
+            if (scenario.scenarioId == "D") conflictAsyncActive = true;
+            if (scenario.scenarioId != "D") BeginFlow(scenario.scenarioId, scenario.observation);
             try
             {
+                if (scenario.scenarioId == "D") BeginFlow(scenario.scenarioId, scenario.observation);
                 PatrolClosedLoopResult result;
                 using (var reasoning = new NebiusNemotronReasoningService())
                 {
                     var controller = new PatrolPhysicalAIController(reasoning);
-                    result = await controller.RunAsync(scenario.observation);
+                    var task = controller.RunAsync(scenario.observation);
+                    if (scenario.scenarioId == "D") conflictPendingTask = task;
+                    result = await task;
+                    if (scenario.scenarioId == "D" && conflictAborted) return;
                 }
 
                 bool matches = result != null
@@ -148,7 +207,8 @@ namespace PatrolAI.Scenarios
                         reobservationSessionId = PatrolReobservationEvidenceReader.CurrentSessionId();
                         Evidence.SetPhysicalWorkflowStatus(
                             "PHYSICAL RE-OBSERVATION: RUNNING");
-                        StartCoroutine(ObserveAgenticInspection(scenario));
+                        var coroutine = StartCoroutine(ObserveAgenticInspection(scenario));
+                        if (scenario.scenarioId == "D") conflictCoroutine = coroutine;
                         observingAgenticInspection = true;
                     }
                 }
@@ -173,8 +233,11 @@ namespace PatrolAI.Scenarios
             }
             finally
             {
-                if (!observingAgenticInspection)
+                if (scenario.scenarioId == "D") conflictAsyncActive = false;
+                if (!observingAgenticInspection) {
                     IsRunning = false;
+                    if (scenario.scenarioId == "D") CompleteConflictReservation();
+                }
             }
         }
 
@@ -199,6 +262,35 @@ namespace PatrolAI.Scenarios
         }
 
         private IEnumerator ObserveAgenticInspection(PatrolDemoScenario scenario)
+        {
+            if (scenario.scenarioId != "D") {
+                var unchanged = ObserveAgenticInspectionCore(scenario);
+                while (unchanged.MoveNext()) yield return unchanged.Current;
+                yield break;
+            }
+            var workflow = ObserveAgenticInspectionCore(scenario);
+            try {
+                while (!conflictAborted) {
+                    bool more;
+                    try { more = workflow.MoveNext(); }
+                    catch (Exception exception) {
+                        LatestResult.message = "Conflict re-observation failed: " + exception.GetType().Name;
+                        Evidence.SetReobservationFailed(LatestResult.message);
+                        ApplyConflictTerminal(scenario.observation, null);
+                        IsRunning = false;
+                        break;
+                    }
+                    if (!more) break;
+                    yield return workflow.Current;
+                }
+            }
+            finally {
+                try { (workflow as IDisposable)?.Dispose(); }
+                finally { CompleteConflictReservation(); }
+            }
+        }
+
+        private IEnumerator ObserveAgenticInspectionCore(PatrolDemoScenario scenario)
         {
             yield return null;
             while (baselineAdapter != null
@@ -252,6 +344,7 @@ namespace PatrolAI.Scenarios
             LatestResult.reobservation = updatedObservation;
             Evidence.SetReobservationComplete(updatedObservation);
             Task<PatrolClosedLoopResult> secondTask = RunSecondReasoningAsync(updatedObservation);
+            if (scenario.scenarioId == "D") conflictPendingTask = secondTask;
             while (!secondTask.IsCompleted)
                 yield return null;
 

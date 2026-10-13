@@ -8,8 +8,20 @@ namespace UnityEngine
     [AttributeUsage(AttributeTargets.Class)] public sealed class DisallowMultipleComponent : Attribute { }
     [AttributeUsage(AttributeTargets.Field)] public sealed class SerializeField : Attribute { }
     public class Object { public static T FindAnyObjectByType<T>() where T : class => TestObjects.Get<T>(); }
+    public sealed class GameObject
+    {
+        public static readonly List<MonoBehaviour> Components = new List<MonoBehaviour>();
+        public GameObject(string name) { }
+        public T AddComponent<T>() where T : MonoBehaviour, new()
+        { var component = new T { gameObject = this }; Components.Add(component); return component; }
+    }
     public class MonoBehaviour : Object
     {
+        public GameObject gameObject;
+        protected static void DontDestroyOnLoad(GameObject value) { }
+        protected static void Destroy(GameObject value) { GameObject.Components.RemoveAll(c => c.gameObject == value); }
+        protected void StopCoroutine(Coroutine value) { if (Routine != null) { PendingDispose(Routine); Routine = null; } }
+        private static void PendingDispose(IEnumerator routine) { TestObjects.Pending.Remove(routine); (routine as IDisposable)?.Dispose(); }
         public IEnumerator Routine;
         protected T GetComponent<T>() where T : class => TestObjects.Get<T>();
         protected Coroutine StartCoroutine(IEnumerator routine)
@@ -42,7 +54,8 @@ namespace UnityEngine
     public static class Application
     {
         public static bool isPlaying => true;
-        public static string dataPath => AppContext.BaseDirectory;
+        public static string dataPath = System.IO.Path.Combine(AppContext.BaseDirectory, "Player_Data");
+        public static string persistentDataPath => AppContext.BaseDirectory;
     }
     public static class JsonUtility { public static string ToJson(object value, bool prettyPrint) => "{}"; }
     public static class Time { public static float realtimeSinceStartup; }
@@ -90,3 +103,5 @@ namespace VisionGuard.Phase5
         public void EvaluateLatestFusion() { State = "COMPLETE"; }
     }
 }
+
+namespace UnityEngine { public static class Debug { public static readonly List<string> Messages = new List<string>(); public static void Log(object value) { Messages.Add(value.ToString()); } public static void LogWarning(object value) => Log(value); } }

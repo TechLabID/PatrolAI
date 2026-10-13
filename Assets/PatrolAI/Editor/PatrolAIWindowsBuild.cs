@@ -5,6 +5,7 @@ using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEditor.Callbacks;
 using UnityEngine;
+using PatrolAI.Runtime;
 
 namespace PatrolAI.Editor
 {
@@ -59,7 +60,33 @@ namespace PatrolAI.Editor
                 Path.Combine(outputRoot, "requirements-phase2.txt"),
                 true);
             Directory.CreateDirectory(Path.Combine(outputRoot, "exchange"));
+            ProvisionPython(projectRoot, outputRoot);
             Debug.Log("PATROLAI_STANDALONE_PYTHON_RUNTIME_READY root=" + outputRoot);
+        }
+
+        private static void ProvisionPython(string projectRoot, string outputRoot)
+        {
+            PatrolPythonRuntime.ResolveOrThrow(out string ignoredRoot, out string python);
+            var start = new System.Diagnostics.ProcessStartInfo {
+                FileName = python,
+                Arguments = "-I \"" + Path.Combine(projectRoot, "tools", "provision_player_python.py")
+                    + "\" --output-root \"" + outputRoot + "\" --requirements \""
+                    + Path.Combine(projectRoot, "requirements-phase2.txt") + "\"",
+                WorkingDirectory = projectRoot, UseShellExecute = false, CreateNoWindow = true,
+                RedirectStandardOutput = true, RedirectStandardError = true
+            };
+            using (var process = System.Diagnostics.Process.Start(start)) {
+                var stdout = process.StandardOutput.ReadToEndAsync();
+                var stderr = process.StandardError.ReadToEndAsync();
+                if (!process.WaitForExit(300000)) {
+                    process.Kill();
+                    throw new BuildFailedException("PatrolAI Python provisioning timed out.");
+                }
+                if (process.ExitCode != 0)
+                    throw new BuildFailedException("PatrolAI Python provisioning failed. Validate the project "
+                        + "Python 3.12 x64 environment against requirements-phase2.txt. " + stderr.Result.Trim());
+                Debug.Log(stdout.Result.Trim());
+            }
         }
 
         private static void CopyPythonFiles(string sourceRoot, string destinationRoot)

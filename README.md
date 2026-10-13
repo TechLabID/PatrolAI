@@ -129,11 +129,10 @@ Never commit a real key, `.env` file, Authorization header, screenshot containin
 
 1. Confirm the competition scene is enabled in Build Profiles: `Assets/VisionGuard/Phase5/Scenes/VISIONGUARD_IndustrialRoom_Phase5_v01.unity`.
 2. Build for Windows Standalone x86_64 to `Builds/Windows/PatrolAI/PatrolAI.exe`.
-3. The Editor-only post-build helper copies the required `agent/`, `vision/`, and `camera/` Python source plus `requirements-phase2.txt` beside the executable. It does not copy credentials or a Python environment.
-4. In the executable directory, create `.venv-phase2` with Python 3.12 x64 and install the copied requirements.
-5. Set `NEBIUS_API_KEY` in the process or user environment, then launch `PatrolAI.exe`.
+3. Complete the project Python setup above before building. The post-build helper copies `agent/`, `vision/`, `camera/`, and `requirements-phase2.txt`, creates an empty `exchange/`, and provisions a portable `.patrolai-python/` interpreter with the exact pinned packages. Provisioning validates Python 3.12 x64 and fails the build step if prerequisites or runtime imports fail.
+4. Launch `PatrolAI.exe` with `NEBIUS_API_KEY` supplied through the environment. No Python override, executable-relative venv creation, or reservation-marker deletion is needed for a normal prepared build. The complete build directory can be relocated; the destination machine does not require a Python installation.
 
-As an alternative to the executable-relative environment, advanced users may set `PATROLAI_PYTHON` to the absolute path of a compatible Python 3.12 executable with the required packages installed.
+Discovery order is explicit: a configured `PATROLAI_PYTHON` absolute executable, executable-relative `.venv-phase2/Scripts/python.exe`, then the provisioned `.patrolai-python/python.exe`. An invalid explicit override fails instead of silently selecting another interpreter. PATH, the registry, and unrelated Python installations are not searched. See [standalone runtime and reservation lifecycle](docs/Standalone_Runtime.md) for provisioning, prerequisites, and fail-safe recovery.
 
 The Windows executable and its runtime artifacts are intentionally excluded from the source repository. See [Windows build validation](Assets/PatrolAI/Competition/PATROLAI_WINDOWS_BUILD_VALIDATION.md) for the verified configuration and the separation between automated and manual evidence.
 

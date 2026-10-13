@@ -8,11 +8,11 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 TESTS = Path(__file__).resolve().parent
-OUT = ROOT / "tests/artifacts/phase10a_ui"
+OUT = ROOT / "tests/artifacts/phase10a_d2"
 
 
-def command(args, name):
-    result = subprocess.run([str(a) for a in args], cwd=ROOT, capture_output=True, text=True)
+def command(args, name, cwd=ROOT):
+    result = subprocess.run([str(a) for a in args], cwd=cwd, capture_output=True, text=True)
     (OUT / (name + ".log")).write_text(result.stdout + result.stderr, encoding="utf-8")
     print(result.stdout, end="")
     if result.returncode:
@@ -74,12 +74,20 @@ class OfflineSuite {
 }
 ''', encoding="utf-8")
     production = build("OfflineSuite", sources + [TESTS / "UnityFixtures.cs", suite], "OfflineSuite")
-    command([dotnet, production], "offline-harnesses")
+    scratch = OUT / "regression-scratch"
+    scratch.mkdir(parents=True, exist_ok=True)
+    evidence = scratch / "Assets/PatrolAI/Evaluation/Evidence"
+    evidence.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(patrol / "Evaluation/Evidence/phase7_ai_necessity_results.json", evidence)
+    command([dotnet, production], "offline-harnesses", cwd=scratch)
     fixture_sources = [p for p in sources if p.name not in
                        ("NebiusNemotronReasoningService.cs", "PatrolReobservationEvidenceReader.cs")]
     fixture_sources += list(TESTS.glob("*.cs"))
     fixtures = build("UIStateRegression", fixture_sources, "PatrolUIStateRegression")
-    command([dotnet, fixtures], "ui-auto-regressions")
+    command([dotnet, fixtures], "ui-auto-regressions", cwd=scratch)
+    standalone_sources = fixture_sources + list((ROOT / "tests/patrol_standalone").glob("*.cs"))
+    standalone = build("StandaloneRegression", standalone_sources, "StandaloneRegression")
+    command([dotnet, standalone], "standalone-regressions", cwd=scratch)
     command([sys.executable, patrol / "Evaluation/Evidence/verify_stored_evidence.py"], "public-evidence")
     print("ALL OFFLINE CHECKS: PASS; HTTP REQUESTS=0; BENCHMARK RERUNS=0")
 
