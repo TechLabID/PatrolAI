@@ -22,7 +22,7 @@ The rule baseline uses condition, evidence status, confidence threshold, and exp
 
 ## Live execution boundary
 
-`PatrolAIBenchmarkRunner` makes one request per case through the existing `NebiusNemotronReasoningService`. The hard ceiling is 24 calls and there is no model retry. Invalid output, transport failure, validation failure, or safe normalization is not counted as a REAL model result. Generated results are written under ignored `evaluation/results/` and must not be added to Git.
+`PatrolAIBenchmarkRunner` makes one request per case through the existing `NebiusNemotronReasoningService`. The hard ceiling is 24 calls and there is no model retry. Invalid output, transport failure, validation failure, or safe normalization is not counted as a REAL model result. New runtime-generated results are written under ignored `evaluation/results/`. The reviewed [stored historical evidence copies](Evidence/README.md) are intentionally distributed separately for offline fresh-clone verification; no benchmark rerun or live credentials are required. These byte-for-byte copies preserve decisions, scores, labels, and hashes without sanitization.
 
 Run the offline harness before any live run. A live run requires `NEBIUS_API_KEY` in the process environment. Never print or serialize its value.
 

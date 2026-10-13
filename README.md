@@ -202,6 +202,8 @@ That means this pilot supports a narrower conclusion:
 
 The Phase 8B audit covered **16/16 held-out cases and 24/24 original benchmark cases** using stored data/results only. No new inference or benchmark rerun was performed. The held-out freeze manifest passed **9/9 hash checks**. No few-shot contamination was found in the inspected production prompt/client path. Model-training contamination and independent preregistration of the original benchmark remain **NOT VERIFIED**.
 
+Stored historical evidence for the Phase 7B original-result checks and held-out 9/9 freeze/hash checks is available in [Evaluation/Evidence](Assets/PatrolAI/Evaluation/Evidence/README.md). A fresh clone can verify these stored results/hashes locally with the included read-only Python verifier; no benchmark rerun or live credentials are required. The three historical artifacts are byte-for-byte copies; no sanitization or changes to decisions, scores, labels, or hashes were performed.
+
 Detailed methodology and case-level cue classifications are documented in [PATROLAI_CUE_FAIRNESS_AUDIT.md](Assets/PatrolAI/Competition/PATROLAI_CUE_FAIRNESS_AUDIT.md). The broader action/risk evaluation remains in [PATROLAI_AI_NECESSITY_EVALUATION.md](Assets/PatrolAI/Competition/PATROLAI_AI_NECESSITY_EVALUATION.md).
 
 ### HC09 demo status
