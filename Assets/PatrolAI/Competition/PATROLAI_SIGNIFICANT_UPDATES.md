@@ -1,12 +1,16 @@
 # PatrolAI Significant Hackathon Updates
 
+## Current claim boundary — Phase 8B
+
+Phase 8B audited **16/16 held-out cases and 24/24 original cases** using existing source/results only. Under the conservative rubric, **8/16 held-out cases contain answer-bearing cues**. On the no-cue held-out subset, **bounded Rule v2 = raw Nemotron = hybrid = 8/8 action-correct**; on conflicting no-cue cases, **all three = 2/2**. Both raw-model improvements over Rule v2 (HC09/HC11) occurred in STOP-cued contexts. **NO FAIR DEMO CANDIDATE** met the isolated-superiority criteria. This pilot does not establish AI necessity or Nemotron universal superiority. **External review: PENDING.** HC09 is a functional example, not isolated superiority proof. Historical aggregate counts remain unchanged. See [the cue/fairness audit](PATROLAI_CUE_FAIRNESS_AUDIT.md).
+
 This record separates inherited VisionGuardAI capabilities from work created for the Nebius × NVIDIA Global AI Hackathon. It prevents existing behavior from being presented as new.
 
 ## Protected inherited baseline
 
 The tag `v0.1-patrolai-baseline` already contained:
 
-- the RF90 industrial environment;
+- the industrial environment;
 - OpenCV perception;
 - mobile-inspector movement and inspection poses;
 - active agentic re-observation;
@@ -44,6 +48,12 @@ Structured observation
 
 Scenario B integrates with the inherited `VGPhase3AgentController.RunAgenticInspection()` entry point only after a validated `REOBSERVE` decision. Scenarios A and C do not invoke agentic inspection.
 
+## Phase 7 — AI necessity evidence (2026-10-05)
+
+New work adds a bounded rule baseline, 24 fixed-label synthetic cases, REAL Token Factory/Nemotron evaluation and metrics, and a second reasoning call after inherited agentic re-observation. Measured exact accuracy: rules 18/24 (75%), Nemotron 16/24 (66.67%). Conflicting cases: rules 0/6, Nemotron 3/6. Missed required hazard STOPs: rules 2/8, Nemotron 0/8; neither produced an inappropriate CONTINUE. All 24 calls were REAL, with zero invalid output, fallback or failed calls; mean/median latency 719.75/645 ms. Uncertainty risk labels remain inconsistent. Historical technical classification: MODERATE; Phase 8B supersedes any AI-necessity interpretation. AI necessity is not established.
+
+Offline validation and source compilation PASS. Phase 7/7B manual Unity validation was subsequently owner-reported PASS. AUTO PATROL HC09 manual Unity validation is owner-reported PASS in Phase 8; these approvals concern simulation, not hardware. Current 16-case pilot: bounded Rule v2 14/16 action-correct; raw Nemotron 14/16; Nemotron + Safety Envelope 15/16. HC16 is corrected by the envelope; HC04 remains a missed required STOP. External label review PENDING. [Full methodology, metrics, failure analysis and limitations](PATROLAI_AI_NECESSITY_EVALUATION.md).
+
 ## Validation summary
 
 - Nemotron parser/validator offline tests: 12/12 PASS.
@@ -54,4 +64,3 @@ Scenario B integrates with the inherited `VGPhase3AgentController.RunAgenticInsp
 - Phase 5 scenarios and UI: manually validated in Unity by the project owner.
 
 These are engineering validation observations, not safety certification, production deployment, or physical-hardware evidence.
-

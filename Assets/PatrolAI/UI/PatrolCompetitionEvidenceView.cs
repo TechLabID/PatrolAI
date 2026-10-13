@@ -15,6 +15,7 @@ namespace PatrolAI.UI
     {
         private const string CompetitionScene = "VISIONGUARD_IndustrialRoom_Phase5_v01";
         private PatrolDemoScenarioRunner scenarioRunner;
+        private PatrolAutoPatrolDemoController autoPatrol;
         private PatrolBaselineActionAdapter baselineAdapter;
         private readonly PatrolBaselineWorkflowDetailState workflowDetail =
             new PatrolBaselineWorkflowDetailState();
@@ -30,6 +31,11 @@ namespace PatrolAI.UI
         private GUIStyle safeButtonStyle;
         private GUIStyle reobserveButtonStyle;
         private GUIStyle hazardButtonStyle;
+        private GUIStyle reviewerTextStyle;
+        private GUIStyle reviewerValueStyle;
+        private PatrolObservation hc09;
+        private string hc09RuleAction;
+        private VisionGuard.Phase3.VGMobileInspectorMovement reviewerInspector;
         private readonly List<Texture2D> generatedTextures = new List<Texture2D>();
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -44,13 +50,18 @@ namespace PatrolAI.UI
             var panel = new GameObject("PatrolAI_Competition_Demo");
             panel.AddComponent<PatrolBaselineActionAdapter>();
             panel.AddComponent<PatrolDemoScenarioRunner>();
+            panel.AddComponent<PatrolAutoPatrolDemoController>();
             panel.AddComponent<PatrolCompetitionEvidenceView>();
         }
 
         private void Awake()
         {
             scenarioRunner = GetComponent<PatrolDemoScenarioRunner>();
+            autoPatrol = GetComponent<PatrolAutoPatrolDemoController>();
             baselineAdapter = GetComponent<PatrolBaselineActionAdapter>();
+            hc09 = PatrolAutoPatrolDemoController.CreateObservation();
+            hc09RuleAction = PatrolAI.Evaluation.RuleBasedSafetyBaselineV2.Decide(hc09).action;
+            reviewerInspector = FindAnyObjectByType<VisionGuard.Phase3.VGMobileInspectorMovement>();
         }
 
         private void OnGUI()
@@ -72,8 +83,10 @@ namespace PatrolAI.UI
 
             DrawHeader(scenarioRunner.Evidence);
             DrawScenarioMenu();
-            DrawBaselineMenu();
-            DrawWorkflowDetailPanel();
+            bool reviewerMode = !scenarioRunner.IsRunning && (autoPatrol.IsRunning
+                || scenarioRunner.Evidence.ObservationSource.Contains("HELD-OUT HC09"));
+            if (reviewerMode) { DrawHc09ReviewerPanel(scenarioRunner.Evidence); DrawInspectorStatus(scenarioRunner.Evidence); }
+            else { DrawBaselineMenu(); DrawWorkflowDetailPanel(); }
             DrawEvidencePanel(scenarioRunner.Evidence);
             DrawExitButton();
             GUI.matrix = originalMatrix;
@@ -101,18 +114,18 @@ namespace PatrolAI.UI
 
             GUI.Label(new Rect(38f, 25f, 250f, 34f), "PatrolAI", brandStyle);
             GUI.Label(new Rect(40f, 58f, 255f, 18f),
-                "AUTONOMOUS INSPECTION & SAFETY MONITORING", smallLabelStyle);
+                "SIMULATED INDUSTRIAL INSPECTION", smallLabelStyle);
             GUI.Label(new Rect(318f, 29f, 700f, 24f),
-                "A  SAFE → CONTINUE    |    B  REOBSERVE → AGENTIC    |    C  HAZARD → STOP",
+                "A SAFE  |  B REOBSERVE  |  C HAZARD  |  D CONFLICT  |  AUTO PATROL",
                 labelStyle);
             GUI.Label(new Rect(318f, 57f, 700f, 18f),
                 "SENSE  →  REASON  →  DECIDE  →  ACT", smallLabelStyle);
 
             Color runtimeColor = RuntimeColor(evidence.RuntimeStatus);
-            FillRect(new Rect(1192f, 30f, 160f, 42f),
+            FillRect(new Rect(1090f, 30f, 260f, 42f),
                 new Color(runtimeColor.r, runtimeColor.g, runtimeColor.b, 0.3f));
-            DrawColoredLabel(new Rect(1206f, 38f, 138f, 26f),
-                "RUNTIME: " + evidence.RuntimeStatus, runtimeColor, headingStyle);
+            DrawColoredLabel(new Rect(1104f, 38f, 232f, 26f),
+                "RUNTIME: " + evidence.RuntimeStatus, runtimeColor, labelStyle);
             GUI.Label(new Rect(1372f, 28f, 500f, 22f),
                 "PROVIDER: " + evidence.Provider, labelStyle);
             GUI.Label(new Rect(1372f, 53f, 500f, 22f),
@@ -121,32 +134,35 @@ namespace PatrolAI.UI
 
         private void DrawEvidencePanel(PatrolCompetitionEvidenceState evidence)
         {
-            var rect = new Rect(306f, 862f, 1298f, 200f);
+            var rect = new Rect(306f, 832f, 1298f, 230f);
             GUI.Box(rect, string.Empty, panelStyle);
             FillRect(new Rect(rect.x, rect.y, rect.width, 4f),
                 new Color(0.02f, 0.55f, 1f, 1f));
-            GUI.Label(new Rect(rect.x + 16f, rect.y + 12f, rect.width - 32f, 25f),
-                "COMPETITION EVIDENCE — LATEST RESULT", headingStyle);
+            GUI.Label(new Rect(rect.x + 16f, rect.y + 12f, 260f, 25f),
+                "COMPETITION EVIDENCE", labelStyle);
+            GUI.Label(new Rect(rect.x + 285f, rect.y + 12f, rect.width - 301f, 25f),
+                evidence.ObservationSource + " | UNITY: SIMULATED | NEMOTRON: " + evidence.RuntimeStatus,
+                smallLabelStyle);
 
             float tileTop = rect.y + 44f;
             float tileHeight = 82f;
             float x = rect.x + 16f;
-            DrawEvidenceTile(ref x, tileTop, 142f, tileHeight,
+            DrawEvidenceTile(ref x, tileTop, 110f, tileHeight,
                 "RUNTIME", evidence.RuntimeStatus, RuntimeColor(evidence.RuntimeStatus));
-            DrawEvidenceTile(ref x, tileTop, 184f, tileHeight,
+            DrawEvidenceTile(ref x, tileTop, 176f, tileHeight,
                 "PROVIDER", evidence.Provider, new Color(0.15f, 0.8f, 1f));
             DrawEvidenceTile(ref x, tileTop, 270f, tileHeight,
                 "MODEL", evidence.Model, Color.white);
             DrawEvidenceTile(ref x, tileTop, 180f, tileHeight,
                 "PATROL DECISION", evidence.PatrolDecision,
                 DecisionColor(evidence.PatrolDecision));
-            DrawEvidenceTile(ref x, tileTop, 142f, tileHeight,
+            DrawEvidenceTile(ref x, tileTop, 132f, tileHeight,
                 "PATROL ACTION", evidence.PatrolAction,
                 DecisionColor(evidence.PatrolAction));
-            DrawEvidenceTile(ref x, tileTop, 142f, tileHeight,
+            DrawEvidenceTile(ref x, tileTop, 194f, tileHeight,
                 "FINAL STATE", evidence.FinalState,
                 DecisionColor(evidence.FinalState));
-            DrawEvidenceTile(ref x, tileTop, 142f, tileHeight,
+            DrawEvidenceTile(ref x, tileTop, 120f, tileHeight,
                 "LATENCY", evidence.Latency, Color.white);
 
             GUI.Label(new Rect(rect.x + 18f, rect.y + 137f, rect.width - 36f, 22f),
@@ -155,11 +171,64 @@ namespace PatrolAI.UI
                 + "    |    CONFIDENCE: " + evidence.PerceptionConfidence,
                 labelStyle);
             GUI.Label(new Rect(rect.x + 18f, rect.y + 166f, rect.width - 36f, 22f),
-                evidence.Detail, smallLabelStyle);
+                "CLOSED-LOOP DEMO — FIRST: " + evidence.FirstDecision
+                + "    |    RE-OBSERVATION: " + evidence.ReobservationStatus
+                + "    |    SECOND: " + evidence.SecondDecision,
+                smallLabelStyle);
+            GUI.Label(new Rect(rect.x + 18f, rect.y + 195f, rect.width - 36f, 22f),
+                string.IsNullOrEmpty(evidence.Comparison) ? evidence.Detail : evidence.Comparison,
+                smallLabelStyle);
+        }
+
+        private void DrawInspectorStatus(PatrolCompetitionEvidenceState evidence)
+        {
+            if (reviewerInspector == null) return;
+            string status = reviewerInspector.IsMoving ? "INSPECTOR: MOVING"
+                : evidence.PatrolAction == "STOP" ? "INSPECTOR: HOLDING POSITION (STOP)"
+                : reviewerInspector.IsAtInspectionPose ? "INSPECTOR: AT INSPECTION POSE" : "INSPECTOR: READY";
+            GUI.Box(new Rect(306f, 772f, 922f, 44f), string.Empty, panelStyle);
+            DrawColoredLabel(new Rect(326f, 778f, 882f, 34f), status,
+                DecisionColor(status), reviewerTextStyle);
+        }
+
+        private void DrawHc09ReviewerPanel(PatrolCompetitionEvidenceState evidence)
+        {
+            var rect = new Rect(1248f, 108f, 654f, 690f);
+            GUI.Box(rect, string.Empty, panelStyle);
+            float left = rect.x + 20f;
+            GUI.Label(new Rect(left, rect.y + 16f, 290f, 30f),
+                "RULE-BASED BASELINE", headingStyle);
+            GUI.Label(new Rect(left + 352f, rect.y + 16f, 260f, 30f),
+                "NEMOTRON", headingStyle);
+            DrawColoredLabel(new Rect(left, rect.y + 54f, 280f, 48f),
+                hc09RuleAction, DecisionColor(hc09RuleAction), reviewerValueStyle);
+            GUI.Label(new Rect(left + 290f, rect.y + 60f, 58f, 38f), "VS", headingStyle);
+            DrawColoredLabel(new Rect(left + 352f, rect.y + 54f, 262f, 60f),
+                evidence.RuntimeStatus == "REAL" ? evidence.PatrolDecision : evidence.RuntimeStatus,
+                DecisionColor(evidence.PatrolDecision), reviewerValueStyle);
+            GUI.Label(new Rect(left, rect.y + 112f, 614f, 30f),
+                "LOCAL SAMPLE — HELD-OUT HC09", reviewerTextStyle);
+            GUI.Label(new Rect(left, rect.y + 146f, 614f, 30f),
+                "UNITY — SIMULATED   |   NEMOTRON — " + evidence.RuntimeStatus, reviewerTextStyle);
+            GUI.Label(new Rect(left, rect.y + 194f, 614f, 28f),
+                "HELD-OUT CONTEXT (SCENARIO CLAIMS)", headingStyle);
+            // Verbatim frozen context, not a synthesized sensor observation or model explanation.
+            GUI.Label(new Rect(left, rect.y + 228f, 614f, 230f),
+                hc09.additionalContext, reviewerTextStyle);
+            GUI.Label(new Rect(left, rect.y + 468f, 614f, 28f),
+                "LIVE MODEL RATIONALE", headingStyle);
+            string rationale = evidence.ModelRationale;
+            if (string.IsNullOrWhiteSpace(rationale)) rationale = "No current validated rationale available.";
+            else if (rationale.Length > 200) rationale = rationale.Substring(0, 197) + "…";
+            GUI.Label(new Rect(left, rect.y + 502f, 614f, 122f), rationale, reviewerTextStyle);
+            GUI.Label(new Rect(left, rect.y + 638f, 614f, 32f),
+                "Rule v2 | " + autoPatrol.Status + " | " + evidence.FinalState, headingStyle);
         }
 
         private void DrawBaselineMenu()
         {
+            bool previousEnabled = GUI.enabled;
+            GUI.enabled = previousEnabled && !scenarioRunner.IsRunning && !autoPatrol.ControlsBusy;
             var rect = new Rect(1248f, 108f, 654f, 98f);
             GUI.Box(rect, string.Empty, panelStyle);
             GUI.Label(new Rect(rect.x + 14f, rect.y + 8f, rect.width - 28f, 22f),
@@ -192,22 +261,23 @@ namespace PatrolAI.UI
                 baselineAdapter.FusionStatus, smallLabelStyle);
             GUI.Label(new Rect(left + (buttonWidth + gap) * 2f, rect.y + 76f,
                 buttonWidth, 16f), baselineAdapter.TemporalStatus, smallLabelStyle);
+            GUI.enabled = previousEnabled;
         }
 
         private void DrawScenarioMenu()
         {
-            var rect = new Rect(18f, 108f, 270f, 410f);
+            var rect = new Rect(18f, 108f, 270f, 494f);
             GUI.Box(rect, string.Empty, panelStyle);
             FillRect(new Rect(rect.x, rect.y, 4f, rect.height),
                 new Color(1f, 0.72f, 0.05f, 1f));
             GUI.Label(new Rect(rect.x + 16f, rect.y + 14f, rect.width - 32f, 26f),
                 "DEMO SCENARIOS", headingStyle);
             GUI.Label(new Rect(rect.x + 16f, rect.y + 42f, rect.width - 32f, 18f),
-                "SELECT A VALIDATED LIVE FLOW", smallLabelStyle);
+                "SELECT A LIVE FLOW", smallLabelStyle);
 
             float buttonLeft = rect.x + 16f;
             float buttonWidth = rect.width - 32f;
-            GUI.enabled = !scenarioRunner.IsRunning;
+            GUI.enabled = !scenarioRunner.IsRunning && !autoPatrol.ControlsBusy;
             if (GUI.Button(new Rect(buttonLeft, rect.y + 70f, buttonWidth, 94f),
                 "A — SAFE\n→ CONTINUE", safeButtonStyle))
                 scenarioRunner.RunSafeScenario();
@@ -217,7 +287,15 @@ namespace PatrolAI.UI
             if (GUI.Button(new Rect(buttonLeft, rect.y + 282f, buttonWidth, 94f),
                 "C — HAZARD\n→ STOP", hazardButtonStyle))
                 scenarioRunner.RunHazardScenario();
+            if (GUI.Button(new Rect(buttonLeft, rect.y + 382f, buttonWidth, 26f),
+                "D — SYNTHETIC CONFLICT", reobserveButtonStyle))
+                scenarioRunner.RunConflictingEvidenceScenario();
+            if (GUI.Button(new Rect(buttonLeft, rect.y + 420f, buttonWidth, 34f),
+                "AUTO PATROL", reobserveButtonStyle))
+                autoPatrol.StartPatrol();
             GUI.enabled = true;
+            GUI.Label(new Rect(buttonLeft, rect.y + 460f, buttonWidth, 22f),
+                autoPatrol.Status, smallLabelStyle);
         }
 
         private void DrawWorkflowDetailPanel()
@@ -340,7 +418,7 @@ namespace PatrolAI.UI
                 new Color(color.r, color.g, color.b, 0.9f));
             GUI.Label(new Rect(left + 12f, top + 10f, width - 20f, 18f),
                 label, smallLabelStyle);
-            DrawColoredLabel(new Rect(left + 12f, top + 34f, width - 20f, 38f),
+            DrawColoredLabel(new Rect(left + 12f, top + 31f, width - 20f, height - 36f),
                 value, color, valueStyle);
             left += width + 8f;
         }
@@ -432,6 +510,7 @@ namespace PatrolAI.UI
                 fontSize = 17,
                 normal = { textColor = Color.white },
                 clipping = TextClipping.Clip,
+                wordWrap = false,
                 alignment = TextAnchor.MiddleLeft
             };
             headingStyle = new GUIStyle(labelStyle)
@@ -450,6 +529,10 @@ namespace PatrolAI.UI
                 fontStyle = FontStyle.Bold,
                 wordWrap = true
             };
+            reviewerTextStyle = new GUIStyle(labelStyle) { fontSize = 24, wordWrap = true,
+                alignment = TextAnchor.UpperLeft };
+            reviewerValueStyle = new GUIStyle(valueStyle) { fontSize = 30,
+                alignment = TextAnchor.UpperLeft };
             brandStyle = new GUIStyle(headingStyle)
             {
                 fontSize = 30,

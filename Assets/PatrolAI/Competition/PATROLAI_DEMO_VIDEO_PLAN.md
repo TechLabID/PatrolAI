@@ -1,8 +1,18 @@
 # PatrolAI Demo Video Plan
 
+## Current claim boundary — Phase 8B
+
+Phase 8B audited **16/16 held-out cases and 24/24 original cases** using existing source/results only. Under the conservative rubric, **8/16 held-out cases contain answer-bearing cues**. On the no-cue held-out subset, **bounded Rule v2 = raw Nemotron = hybrid = 8/8 action-correct**; on conflicting no-cue cases, **all three = 2/2**. Both raw-model improvements over Rule v2 (HC09/HC11) occurred in STOP-cued contexts. **NO FAIR DEMO CANDIDATE** met the isolated-superiority criteria. This pilot does not establish AI necessity or Nemotron universal superiority. **External review: PENDING.** HC09 is a functional example, not isolated superiority proof. Historical aggregate counts remain unchanged. See [the cue/fairness audit](PATROLAI_CUE_FAIRNESS_AUDIT.md).
+
 **Target:** 2:50 maximum, English narration/subtitles, no physical-hardware claim.
 
 The Physical AI segment must show at least one continuous minute of actual application modules in action. Record a fresh run; do not present cached, mock, fallback, or prerecorded inference as `REAL`.
+
+## Provenance and narration boundary
+
+For AUTO PATROL / HC09, keep these labels readable: **LOCAL SAMPLE: HELD-OUT HC09**, **UNITY: SIMULATED**, **NEMOTRON: REAL** only after successful current inference (otherwise show the actual FAILED/FALLBACK/NOT VERIFIED status). Provider: Nebius Token Factory. Model: `nvidia/Nemotron-3_5-Lightning`. Say “held-out observation indicates” or “structured observation contains”; do not attribute HC09's scripted danger context to live CCTV, physical sensors, or industrial-camera detection. The inherited Unity/OpenCV secondary observation path is separate simulation evidence.
+
+HC09 was selected for the demo because it is an existing frozen held-out case where Rule v2 and Nemotron produce different actions. Aggregate held-out results are reported separately. Aggregate action-correct results: bounded Rule v2 14/16; raw Nemotron 14/16; hybrid Nemotron + Safety Envelope 15/16. The envelope corrects HC16; HC04 remains incorrect. The held-out comparison is a directional pilot result and is not statistically conclusive industrial validation. External label review: PENDING. AUTO PATROL HC09 manual Unity validation PASS is owner reported; no hardware deployment is claimed.
 
 ## Shot plan
 

@@ -35,6 +35,10 @@ namespace PatrolAI.Scenarios
             Run("C does not trigger agentic inspection", TestHazardDoesNotTriggerAgentic, passed);
             Run("B remains REOBSERVING while inspection runs",
                 TestReobservingStateWhileInspectionRuns, passed);
+            Run("second reasoning evidence preserves first decision",
+                TestSecondReasoningEvidence, passed);
+            Run("synthetic conflict uses real calculations and preserves secondary condition",
+                TestConflictScenario, passed);
             Run("agentic inspection failure is reported truthfully",
                 TestAgenticFailureVisible, passed);
             Run("selecting Agentic displays Agentic fields only",
@@ -53,7 +57,7 @@ namespace PatrolAI.Scenarios
             var report = new StringBuilder();
             foreach (string name in passed)
                 report.AppendLine("PASS: " + name);
-            report.Append("SUMMARY: ").Append(passed.Count).Append("/22 PASS");
+            report.Append("SUMMARY: ").Append(passed.Count).Append("/24 PASS");
             return report.ToString();
         }
 
@@ -208,6 +212,40 @@ namespace PatrolAI.Scenarios
                 "A physical workflow failure must not falsify the completed reasoning mode.");
             Assert(state.Detail.Contains("FAILED"),
                 "Physical workflow failure must be visible.");
+        }
+
+        private static void TestSecondReasoningEvidence()
+        {
+            var state = new PatrolCompetitionEvidenceState();
+            PatrolObservation initial = Observation("INDICATOR_UNCLEAR", "INSUFFICIENT", 0.35f);
+            state.Apply(initial,
+                Result("REAL", "UNKNOWN", "REOBSERVE", "REOBSERVING", true));
+            PatrolObservation updated = Observation("INDICATOR_RED", "VERIFIED", 0.92f);
+            state.SetReobservationComplete(updated);
+            state.ApplySecond(updated,
+                Result("REAL", "DANGER", "STOP", "STOPPED", true));
+            Assert(state.FirstDecision == "UNKNOWN / REOBSERVE",
+                "First decision was not preserved.");
+            Assert(state.SecondDecision == "DANGER / STOP",
+                "Second decision was not displayed.");
+            Assert(state.DecisionChange.Contains("UNKNOWN / REOBSERVE"),
+                "Decision change was not made visible.");
+        }
+
+        private static void TestConflictScenario()
+        {
+            var scenario = PatrolConflictDemoScenario.Create();
+            var rule = PatrolAI.Evaluation.RuleBasedSafetyBaseline.Decide(scenario.observation);
+            Assert(rule.riskLevel == "DANGER" && rule.action == "STOP", "Conflict rule must be calculated.");
+            Assert(scenario.observation.evidenceStatus == "CONFLICT"
+                && scenario.observation.source.Contains("SYNTHETIC"), "Synthetic conflict was not labeled.");
+            Assert(PatrolDemoScenarioRunner.ShouldRunAgenticInspection(scenario,
+                Result("REAL", "DANGER", "STOP", "STOPPED", true)),
+                "Conflict contextual STOP must still allow scheduled evidence collection.");
+            var updated = PatrolConflictDemoScenario.AddResolvedContext(
+                Observation("INDICATOR_GREEN", "VERIFIED", .92f));
+            Assert(updated.detectedCondition == "INDICATOR_GREEN" && updated.evidenceStatus == "VERIFIED",
+                "Secondary condition must not be hard-coded RED.");
         }
 
         private static void TestAgenticDetailSelection()

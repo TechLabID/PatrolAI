@@ -146,6 +146,10 @@ The Windows executable and its runtime artifacts are intentionally excluded from
 - Phase 5 live hazard validation: one observed HTTP 200 `REAL` call produced `DANGER / STOP`, final state `STOPPED`, in 1381 ms.
 - Windows Standalone x86_64 build and executable launch: **PASS**.
 - Manual standalone validation: competition UI, Agentic Inspection, Multi Source Fusion, Latest Verified Fusion, Scenario B re-observation, Scenario C `REAL / DANGER / STOP / STOPPED`, and `EXIT PATROLAI`: **PASS**.
+- Phase 8B cue/fairness audit: **16/16 held-out cases and 24/24 original benchmark cases audited** using stored data/results only; **0 new inference calls** and **0 benchmark reruns**.
+- Phase 8B freeze/integrity verification: **9/9 hashes MATCH** for the held-out freeze manifest; no few-shot contamination was found in the inspected production prompt/client path.
+- Phase 8B held-out no-explicit-cue subset: Rule v2, raw Nemotron, and hybrid were each **8/8 action-correct**. In the conflicting no-cue subset, all three were **2/2 action-correct**.
+- Phase 8B fair-demo audit: **NO FAIR DEMO CANDIDATE** met every predeclared criterion for an isolated Rule-v2-vs-Nemotron superiority demo.
 
 The two latency values are individual validation observations, not a benchmark, SLA, or performance average. See [the demo scenario guide](Assets/PatrolAI/Scenarios/README_DEMO_SCENARIOS.md) and [Windows build validation](Assets/PatrolAI/Competition/PATROLAI_WINDOWS_BUILD_VALIDATION.md) for the documented evidence boundary.
 
@@ -153,7 +157,7 @@ The two latency values are individual validation observations, not a benchmark, 
 
 The industrial scene, OpenCV perception, mobile inspector, active re-observation, fusion/temporal workflows, and their existing movement logic are inherited from the protected `v0.1-patrolai-baseline`.
 
-New competition work includes the PatrolAI identity and contracts, Nebius client, NVIDIA Nemotron structured reasoning, strict parsing and validation, safe fallback, Physical AI decision-to-action orchestration, deterministic scenarios, baseline workflow adapter, and competition evidence UI. The detailed separation is recorded in [PATROLAI_SIGNIFICANT_UPDATES.md](Assets/PatrolAI/Competition/PATROLAI_SIGNIFICANT_UPDATES.md).
+New competition work includes the PatrolAI identity and contracts, Nebius client, NVIDIA Nemotron structured reasoning, strict parsing and validation, safe fallback, Physical AI decision-to-action orchestration, deterministic scenarios, baseline workflow adapter, competition evidence UI, held-out comparative evaluation, and the Phase 8B cue/fairness audit. The detailed separation is recorded in [PATROLAI_SIGNIFICANT_UPDATES.md](Assets/PatrolAI/Competition/PATROLAI_SIGNIFICANT_UPDATES.md).
 
 ## Limitations and Release Status
 
@@ -162,6 +166,8 @@ New competition work includes the PatrolAI identity and contracts, Nebius client
 - Model output remains probabilistic and is constrained by parser, validator, and safe fallback policy.
 - Windows standalone validation proves the tested local configuration; a fresh clone still requires Unity, Python, package installation, a valid Nebius key, and network access.
 - The public source snapshot has passed the public-readiness audit; secrets, provenance-unverified media, generated files, and local-only files are excluded.
+- Phase 8B found explicit or action-implying cues in **8/16 held-out cases** under the conservative rubric. Both stored raw-model improvements over Rule v2 in the conflicting held-out subset occurred in cued cases.
+- PatrolAI therefore does **not** claim that Nemotron universally outperforms Rule v2 or that AI necessity has been established by this pilot.
 
 **Public snapshot readiness: READY.** Repository publication is the next step; this does not mean the repository is already public.
 
@@ -173,7 +179,41 @@ New competition work includes the PatrolAI identity and contracts, Nebius client
 - Inherited demo/reference media and the Unity template icon identified by the publication audit are excluded from the public source snapshot pending any separate provenance/license confirmation.
 - Third-party components and assets remain subject to their respective licenses and are not relicensed by PatrolAI's MIT license.
 
+## Why Nemotron?
+
+PatrolAI uses a **hybrid safety architecture**: deterministic rules remain strong for clear predefined conditions, while Nemotron provides an additional contextual-reasoning path for structured and free-form evidence. Model output is never given unconstrained control; parser/validator checks and a deterministic safety envelope bound execution.
+
+### Held-out pilot results
+
+| Configuration | Held-out action correctness |
+|---|---:|
+| Rule v2 (bounded deterministic rules) | 14/16 (87.50%) |
+| Raw Nemotron | 14/16 (87.50%) |
+| Hybrid Nemotron + Safety Envelope | 15/16 (93.75%) |
+
+Across all five conflicting held-out cases, Rule v2 was action-correct on 3/5, while raw Nemotron and hybrid were 5/5. However, Phase 8B found that **both raw-model improvements over Rule v2 in that conflicting subset occurred in cases containing explicit or action-implying STOP guidance**. For the **no-explicit-cue held-out subset**, Rule v2, raw Nemotron, and hybrid were all **8/8 action-correct**; in the conflicting no-cue subset, all three were **2/2**.
+
+That means this pilot supports a narrower conclusion:
+
+- **SUPPORTED:** deterministic rules remain strong for clear predefined cases.
+- **LIMITED:** Nemotron can participate in contextual and multi-source reasoning within the PatrolAI architecture, and the hybrid design can add operational flexibility.
+- **DO NOT CLAIM:** Nemotron universally outperforms Rule v2.
+- **DO NOT CLAIM:** AI necessity has been established by this pilot.
+
+The Phase 8B audit covered **16/16 held-out cases and 24/24 original benchmark cases** using stored data/results only. No new inference or benchmark rerun was performed. The held-out freeze manifest passed **9/9 hash checks**. No few-shot contamination was found in the inspected production prompt/client path. Model-training contamination and independent preregistration of the original benchmark remain **NOT VERIFIED**.
+
+Detailed methodology and case-level cue classifications are documented in [PATROLAI_CUE_FAIRNESS_AUDIT.md](Assets/PatrolAI/Competition/PATROLAI_CUE_FAIRNESS_AUDIT.md). The broader action/risk evaluation remains in [PATROLAI_AI_NECESSITY_EVALUATION.md](Assets/PatrolAI/Competition/PATROLAI_AI_NECESSITY_EVALUATION.md).
+
+### HC09 demo status
+
+AUTO PATROL using HC09 has **manual Unity validation PASS (owner reported)**. Observation Source: **LOCAL SAMPLE — HELD-OUT HC09**; Environment: **UNITY SIMULATION**; AI Runtime: **REAL — Nebius Token Factory** only after successful current inference; Model: `nvidia/Nemotron-3_5-Lightning`.
+
+HC09 remains useful as a **functional demonstration** of PatrolAI executing a contextual safety scenario. It is **not** used as isolated evidence that Nemotron is superior to the deterministic baseline, because the frozen HC09 context contains explicit STOP-oriented guidance. The reviewer-facing evidence also states that the reported personnel hazard is structured scenario evidence and is not a live industrial-camera detection or necessarily rendered visually in the Unity scene.
+
+The Phase 8B mechanical demo-candidate audit found **NO FAIR DEMO CANDIDATE** that met every predeclared criterion for an isolated Rule-v2-vs-Nemotron superiority demo. Final submission framing therefore emphasizes the closed-loop Physical AI workflow, bounded re-observation, runtime truthfulness, and the hybrid safety architecture rather than an unsupported superiority claim.
+
+**External label review: PENDING.** Independent academic/practitioner feedback will be reported as feedback, not as safety certification or deployment endorsement.
+
 ## License
 
 Project-owned PatrolAI source code is released under the top-level [MIT License](LICENSE), copyright (c) 2026 TechLabID. This license does not grant rights to third-party assets, packages, models, or other components governed by their own terms.
-

@@ -33,7 +33,6 @@ docs/references/mix/
 docs/references/PatrolAI Industrial Inspection UI Spec.png
 Assets/ThirdParty/Mixamo/
 
-# Local RF90 review material and non-source demo evidence
 docs/Phase1A_Static_Review.md
 docs/Phase2_Baseline_Hashes.json
 docs/Phase3_Baseline_Hashes.json
@@ -59,8 +58,8 @@ venv/
 .pytest_cache/
 
 # Local validation workspaces and generated test artifacts
-.codex-*/
 tests/artifacts/
+evaluation/results/
 
 # Runtime-generated VisionGuard data
 exchange/
@@ -71,6 +70,5 @@ Thumbs.db
 desktop.ini
 
 # Local development rules / references
-CODEX.md
 docs/references/
 PATROLAI_PUBLIC_READINESS_AUDIT.md
