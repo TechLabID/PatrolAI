@@ -97,7 +97,7 @@ The overlay keeps decision evidence visible without exposing credentials. It rep
 ## Setup
 
 ```powershell
-git clone <PUBLIC_REPOSITORY_URL>
+git clone https://github.com/TechLabID/PatrolAI.git
 cd PatrolAI
 py -3.12 -m venv .venv-phase2
 .\.venv-phase2\Scripts\Activate.ps1
@@ -122,7 +122,7 @@ Never commit a real key, `.env` file, Authorization header, screenshot containin
 1. Open this folder in Unity `6000.6.3f1`.
 2. Open `Assets/VisionGuard/Phase5/Scenes/VISIONGUARD_IndustrialRoom_Phase5_v01.unity`.
 3. Enter Play Mode.
-4. Use Scenario A, B, or C in the PatrolAI competition panel.
+4. Use Scenario A, B, C, or AUTO PATROL from the PatrolAI competition panel.
 5. Confirm the evidence panel's runtime label before treating a result as live.
 
 ## Build from Source on Windows
@@ -169,7 +169,7 @@ New competition work includes the PatrolAI identity and contracts, Nebius client
 - Phase 8B found explicit or action-implying cues in **8/16 held-out cases** under the conservative rubric. Both stored raw-model improvements over Rule v2 in the conflicting held-out subset occurred in cued cases.
 - PatrolAI therefore does **not** claim that Nemotron universally outperforms Rule v2 or that AI necessity has been established by this pilot.
 
-**Public snapshot readiness: READY.** Repository publication is the next step; this does not mean the repository is already public.
+**Public repository status: PUBLISHED.** This snapshot has passed the public-readiness audit. Repository: [TechLabID/PatrolAI](https://github.com/TechLabID/PatrolAI). Published snapshot: `a32ee2188b90c0e6d17c39b21dc462b8e15f52b3`, tag `v0.8-20261013-phase8b-fairness-public-snapshot-pass`.
 
 ## Third-Party Assets and Dependencies
 

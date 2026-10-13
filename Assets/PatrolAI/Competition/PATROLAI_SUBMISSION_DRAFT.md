@@ -73,9 +73,9 @@ Structured output is a system property, not only a prompt choice. Schema enforce
 
 ## What's next
 
-- Publish the audited public source snapshot; repository publication has not yet occurred.
+- Public source snapshot published: [TechLabID/PatrolAI](https://github.com/TechLabID/PatrolAI), commit `a32ee2188b90c0e6d17c39b21dc462b8e15f52b3`, tag `v0.8-20261013-phase8b-fairness-public-snapshot-pass`.
 - Record the final under-three-minute public demo with at least one minute of application modules in action.
-- Add the public repository and video URLs, then re-run the final submission gate.
+- Add the public repository and video URLs to Devpost, then re-run the final submission gate.
 
 ## Track fit
 
@@ -83,7 +83,7 @@ Structured output is a system property, not only a prompt choice. Schema enforce
 
 ## Current limitations
 
-This is a simulated research prototype, not a certified safety system. No physical hardware is claimed. Windows standalone validation, the MIT source license, and the clean public source snapshot audit are complete; secrets, provenance-unverified media, generated files, and local-only files are excluded. Repository publication, the public video, and final Devpost fields remain incomplete.
+This is a simulated research prototype, not a certified safety system. No physical hardware is claimed. Windows standalone validation, the MIT source license, and the clean public source snapshot audit are complete; secrets, provenance-unverified media, generated files, and local-only files are excluded. The source repository is published. The public video and final Devpost fields remain incomplete.
 
 ## Nebius/NVIDIA feedback
 

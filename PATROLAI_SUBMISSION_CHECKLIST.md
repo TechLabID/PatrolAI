@@ -1,6 +1,10 @@
 # PatrolAI — Nebius × NVIDIA Global AI Hackathon Submission Checklist
 
-> Purpose: keep all competition requirements, implementation evidence, and submission assets organized before final Devpost submission.
+> Purpose: keep competition requirements, recorded implementation evidence, and remaining submission assets organized before final Devpost submission.
+
+**Public repository: PUBLISHED** — [TechLabID/PatrolAI](https://github.com/TechLabID/PatrolAI), commit `a32ee2188b90c0e6d17c39b21dc462b8e15f52b3`, tag `v0.8-20261013-phase8b-fairness-public-snapshot-pass`. Final public video, Devpost submission and external label review remain pending.
+
+Completed implementation checks below summarize the existing [README evidence](README.md), [Windows validation](Assets/PatrolAI/Competition/PATROLAI_WINDOWS_BUILD_VALIDATION.md) and milestone records; they do not claim a new runtime run. Follow the [Phase 8B claim boundary](Assets/PatrolAI/Competition/PATROLAI_CUE_FAIRNESS_AUDIT.md): no established AI necessity or universal Nemotron superiority, and HC09 is a functional example only.
 
 ## 1. Competition Identity
 
@@ -14,11 +18,11 @@
 
 PatrolAI must satisfy all of the following before submission:
 
-- [ ] Project runs on **Nebius Token Factory** or **Nebius AI Cloud**.
-- [ ] Project makes a **real runtime call** to Nebius Token Factory inference API, or is deployed/run using Nebius AI Cloud compute.
-- [ ] Project uses at least one **NVIDIA open-source model**.
-- [ ] Preferred model for PatrolAI reasoning: **NVIDIA Nemotron**.
-- [ ] Nebius/NVIDIA integration is real and functional, not simulated or hard-coded.
+- [x] Project runs on **Nebius Token Factory** or **Nebius AI Cloud**.
+- [x] Project makes a **real runtime call** to Nebius Token Factory inference API, or is deployed/run using Nebius AI Cloud compute.
+- [x] Project uses at least one **NVIDIA open-source model**.
+- [x] Preferred model for PatrolAI reasoning: **NVIDIA Nemotron**.
+- [x] Nebius/NVIDIA integration is real and functional, not simulated or hard-coded.
 - [ ] Project functions consistently as depicted in the demo video and written description.
 
 ## 3. Physical AI Track Requirements
@@ -47,7 +51,7 @@ PatrolAI Decision
 Continue / Reobserve / Stop / Alert / Reroute / Inspect
 ```
 
-Required demo behavior:
+Required final-video behavior (capture remains pending):
 
 - [ ] Sense environment state.
 - [ ] Detect a condition/hazard.
@@ -81,30 +85,31 @@ Keep this section updated as work progresses:
 - [x] Structured observation contract
 - [x] Structured decision contract
 - [x] Nebius connectivity layer implementation
-- [ ] Live Nebius Token Factory connectivity validated
-- [ ] NVIDIA Nemotron reasoning integration
-- [ ] Structured Nemotron → PatrolDecision parsing
-- [ ] Physical AI closed-loop integration
-- [ ] Competition scenarios
-- [ ] Competition-specific UI/status evidence
+- [x] Live Nebius Token Factory connectivity validated
+- [x] NVIDIA Nemotron reasoning integration
+- [x] Structured Nemotron → PatrolDecision parsing
+- [x] Physical AI closed-loop integration
+- [x] Competition scenarios
+- [x] Competition-specific UI/status evidence
 - [ ] Final competition demo workflow
 - [ ] Final submission documentation
 
 ## 5. Current Git Milestones
 
-Current protected milestones:
+Selected protected milestones:
 
 ```text
 v0.1-patrolai-baseline
 v0.2-patrolai-phase1-complete
 v0.3-patrolai-phase2-complete
+v0.8-20261013-phase8b-fairness-public-snapshot-pass
 ```
 
 Before final submission:
 
-- [ ] Create milestone tag after live Nebius validation.
-- [ ] Create milestone tag after Nemotron reasoning PASS.
-- [ ] Create milestone tag after Physical AI closed-loop PASS.
+- [x] Create milestone tag after live Nebius validation.
+- [x] Create milestone tag after Nemotron reasoning PASS.
+- [x] Create milestone tag after Physical AI closed-loop PASS.
 - [ ] Create final submission tag.
 
 ## 6. Nebius API / Credential Safety
@@ -138,20 +143,20 @@ Before locking the final NVIDIA model:
 - [ ] Confirm the selected NVIDIA model is available in the current Nebius account.
 - [ ] Read the model card.
 - [ ] Read and comply with the model-specific EULA.
-- [ ] Record exact model ID used in production/demo.
-- [ ] Record why the model is used in PatrolAI.
+- [x] Record exact model ID used in production/demo.
+- [x] Record why the model is used in PatrolAI.
 
 Selected model:
 
-`TBD`
+NVIDIA Nemotron 3.5 Lightning
 
 Model ID:
 
-`TBD`
+`nvidia/Nemotron-3_5-Lightning`
 
 Purpose:
 
-`TBD`
+Structured safety-decision proposals through Nebius Token Factory, parsed and validated before bounded simulated action. The Phase 8B pilot does not establish AI necessity or universal superiority.
 
 ## 8. Safety / Output Validation
 
@@ -183,18 +188,18 @@ Before final demo:
 
 Submission requires a publicly accessible repository on GitHub, GitLab, or Bitbucket.
 
-Before making the repository public:
+Recorded public-source snapshot checklist:
 
-- [ ] Repository contains necessary source code.
-- [ ] Required project assets are included or documented.
-- [ ] Setup instructions are complete.
+- [x] Repository contains necessary source code.
+- [x] Required project assets are included or documented.
+- [x] Setup instructions are complete.
 - [x] Public open-source license is present.
 - [x] License is visible at repository top level.
-- [ ] README explains how to run PatrolAI.
-- [ ] README explains Nebius usage.
-- [ ] README explains NVIDIA model usage.
-- [ ] README explains significant hackathon updates.
-- [ ] README explains environment-variable setup.
+- [x] README explains how to run PatrolAI.
+- [x] README explains Nebius usage.
+- [x] README explains NVIDIA model usage.
+- [x] README explains significant hackathon updates.
+- [x] README explains environment-variable setup.
 - [x] No secret files are tracked.
 - [x] No private credentials exist in Git history.
 
@@ -210,24 +215,24 @@ Final license choice:
 
 ## 10. README Requirements
 
-Final public README should include:
+Published README coverage:
 
-- [ ] PatrolAI overview
-- [ ] Problem statement
-- [ ] Physical AI concept
-- [ ] Architecture diagram
-- [ ] Technology stack
-- [ ] Nebius Token Factory integration
-- [ ] NVIDIA model integration
-- [ ] OpenCV/perception role
-- [ ] Sense → Perceive → Reason → Decide → Act workflow
-- [ ] Setup instructions
-- [ ] `NEBIUS_API_KEY` setup
-- [ ] Run instructions
-- [ ] Demo scenarios
-- [ ] Significant updates during hackathon
-- [ ] Limitations
-- [ ] License
+- [x] PatrolAI overview
+- [x] Problem statement
+- [x] Physical AI concept
+- [x] Architecture diagram
+- [x] Technology stack
+- [x] Nebius Token Factory integration
+- [x] NVIDIA model integration
+- [x] OpenCV/perception role
+- [x] Sense → Perceive → Reason → Decide → Act workflow
+- [x] Setup instructions
+- [x] `NEBIUS_API_KEY` setup
+- [x] Run instructions
+- [x] Demo scenarios
+- [x] Significant updates during hackathon
+- [x] Limitations
+- [x] License
 
 ## 11. Demo Video Requirements
 
@@ -331,7 +336,7 @@ Final internal target:
 - [ ] Finish live API validation well before final week.
 - [ ] Freeze architecture before final demo week.
 - [ ] Record video before final submission day.
-- [ ] Make repo public only after secret scan.
+- [x] Publish audited source repository after the public-snapshot secret scan.
 - [ ] Submit before deadline with buffer.
 
 ## 16. Pre-Submission Final Gate
@@ -343,7 +348,7 @@ Do not submit until all items below are PASS:
 [x] NVIDIA model runtime use PASS
 [x] Physical AI closed loop PASS
 [x] Demo scenarios PASS
-[ ] Public repo ready
+[x] Public source snapshot ready and repository published
 [x] LICENSE present
 [x] README complete
 [x] Secret scan PASS

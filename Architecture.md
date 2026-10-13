@@ -1,7 +1,34 @@
-# VISIONGUARD AI --- Architecture v1.0
+# PatrolAI Architecture
 
-**Project:** VISIONGUARD AI\
-**Competition:** OpenCV AI Competition 2026\
+PatrolAI targets the **Physical AI track of the Nebius × NVIDIA Global AI Hackathon**. The source repository is [publicly available](https://github.com/TechLabID/PatrolAI); the published Phase 8B snapshot is `a32ee2188b90c0e6d17c39b21dc462b8e15f52b3`, tagged `v0.8-20261013-phase8b-fairness-public-snapshot-pass`.
+
+## Current PatrolAI architecture
+
+The inherited Unity/OpenCV inspection, movement, fusion and temporal workflows are preserved. PatrolAI adds structured observation/decision contracts, Nebius Token Factory inference with `nvidia/Nemotron-3_5-Lightning`, strict parsing/validation, bounded scenario and Auto Patrol orchestration, a deterministic safety envelope, and competition evidence presentation.
+
+```text
+Unity/OpenCV evidence or an explicitly labeled LOCAL SAMPLE
+  → PatrolObservation
+  → Nebius Token Factory / NVIDIA Nemotron
+  → parser and validator
+  → bounded CONTINUE / REOBSERVE / STOP
+  → simulated action and optional re-observation
+  → evidence presentation
+```
+
+HC09 is structured synthetic/local scenario evidence, not live camera/person detection. It is a functional demo, not isolated superiority proof. The Phase 8B pilot does not establish AI necessity or universal Nemotron superiority; external label review remains PENDING. Historical AWS/COOL/Graviton requirements below do not apply to the current PatrolAI inference path.
+
+- [Current competition architecture](Assets/PatrolAI/Competition/PATROLAI_ARCHITECTURE.md)
+- [Setup, run instructions and Phase 8B findings](README.md)
+- [Cue/fairness audit](Assets/PatrolAI/Competition/PATROLAI_CUE_FAIRNESS_AUDIT.md)
+
+## Historical VisionGuardAI design baseline (v1.0)
+
+The sections below retain the original inherited design intentions for provenance. Their OpenCV AI Competition, AWS/COOL/Graviton requirements, proposed repository layout, planned modules and example metrics are historical design material, not current PatrolAI competition requirements or claims that every planned feature was implemented. The current architecture and evidence boundaries above govern this repository.
+
+
+**Historical project:** VISIONGUARD AI\
+**Historical competition:** OpenCV AI Competition 2026\
 **MVP:** Autonomous Agentic Visual Inspection of a Simulated Industrial
 Electrical Room\
 **Architecture principle:** Camera-source-agnostic Agentic Visual
@@ -964,7 +991,7 @@ competition-prototype capability.
 
 ------------------------------------------------------------------------
 
-## 21. Architecture Principles for Codex
+## 21. Historical Architecture Principles
 
 When implementing this architecture:
 
@@ -1046,7 +1073,4 @@ metrics\
 **Energy-aware inspection:** Deferred\
 **COOL/Graviton:** Optional after core PASS
 
-This document is the architecture baseline for implementation. Changes
-that materially alter scope, module boundaries, competition
-requirements, or the core perception-action loop should be documented
-explicitly.
+This historical section records inherited design intentions. For current PatrolAI implementation, scope and evidence boundaries, use the [competition architecture](Assets/PatrolAI/Competition/PATROLAI_ARCHITECTURE.md) and [README](README.md).

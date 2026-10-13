@@ -18,7 +18,7 @@ The protected starting point is Git tag `v0.1-patrolai-baseline`. This baseline 
 
 The following inherited systems remain sealed unless a later phase explicitly authorizes a narrowly scoped change:
 
-- RF90 industrial environment and validated scene;
+- industrial environment and validated scene;
 - OpenCV perception pipeline;
 - mobile inspector movement and inspection-pose behavior;
 - active re-observation workflow;
