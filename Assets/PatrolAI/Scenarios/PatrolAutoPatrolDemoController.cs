@@ -17,13 +17,13 @@ namespace PatrolAI.Scenarios
     {
         public bool IsRunning { get; private set; }
         public string State { get; private set; } = "IDLE";
-        public string Status => "AUTO PATROL: " + State;
+        public string Status => "AUTO PATROL: " + (runner != null && runner.ActiveFlow != "AUTO PATROL"
+            ? "IDLE" : State);
         // Counts reasoning invocations, not confirmed HTTP requests (configuration can fail before HTTP).
         public int ReasoningInvocations { get; private set; }
         public PatrolClosedLoopResult LatestResult { get; private set; }
         public const float WorkflowTimeoutSeconds = 45f;
-        public bool ControlsBusy => IsRunning || (adapter != null
-            && (adapter.AgenticStatus == "RUNNING" || adapter.FusionStatus == "RUNNING"));
+        public bool ControlsBusy => IsRunning || (adapter != null && adapter.IsWorkflowRunning);
         private PatrolDemoScenarioRunner runner;
         private PatrolBaselineActionAdapter adapter;
         private VGMobileInspectorMovement movement;
@@ -45,14 +45,14 @@ namespace PatrolAI.Scenarios
         public void StartPatrol()
         {
             if (IsRunning || runner == null || adapter == null || runner.IsRunning
-                || adapter.AgenticStatus == "RUNNING" || adapter.FusionStatus == "RUNNING") return;
+                || adapter.IsWorkflowRunning) return;
             movement = FindAnyObjectByType<VGMobileInspectorMovement>();
             if (movement != null && movement.IsMoving) return;
             IsRunning = true;
             ReasoningInvocations = 0;
             LatestResult = null;
             State = "STARTING";
-            runner.Evidence.Begin(null); // Clear a previous REAL result before movement.
+            runner.BeginFlow("AUTO PATROL", null); // Clear previous flow evidence before movement.
             StartCoroutine(Guard(RunPatrol()));
         }
 

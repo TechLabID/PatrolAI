@@ -37,8 +37,9 @@ namespace PatrolAI.UI
         {
             PatrolAction = action == null ? "NOT EXECUTED" : action.actionType;
             FinalState = PatrolAction == "STOP" ? "STOPPED" : PatrolAction == "CONTINUE" ? "CONTINUING" : "REOBSERVING";
-            Detail = escalated ? "DETERMINISTIC SAFETY ENVELOPE: STOP / HUMAN REVIEW"
+            string boundedDetail = escalated ? "DETERMINISTIC SAFETY ENVELOPE: STOP / HUMAN REVIEW"
                 : "BOUNDED ACTION: " + PatrolAction;
+            Detail = ReobservationStatus == "FAILED" ? Detail + " | " + boundedDetail : boundedDetail;
         }
 
         public void Begin(PatrolObservation observation)
@@ -64,7 +65,7 @@ namespace PatrolAI.UI
             SecondDecision = "NOT RUN";
             ReobservationStatus = "NOT RUN";
             DecisionChange = "NOT VERIFIED";
-            Detail = "Reasoning in progress.";
+            Detail = observation == null ? "Awaiting observation." : "Reasoning in progress.";
             Comparison = "";
         }
 
@@ -99,7 +100,7 @@ namespace PatrolAI.UI
             {
                 PatrolDecision = "NOT VERIFIED";
                 PatrolAction = "NOT EXECUTED";
-                FinalState = "NOT VERIFIED";
+                FinalState = RuntimeStatus == "FAILED" ? PatrolPhysicalAIController.Error : "NOT VERIFIED";
                 Detail = ValueOrUnknown(result.message);
                 return;
             }
@@ -122,6 +123,10 @@ namespace PatrolAI.UI
             Detail = string.IsNullOrWhiteSpace(status)
                 ? "PHYSICAL RE-OBSERVATION: NOT VERIFIED"
                 : status.Trim().ToUpperInvariant();
+            if (Detail.StartsWith("PHYSICAL RE-OBSERVATION: RUNNING", StringComparison.Ordinal))
+                ReobservationStatus = "RUNNING";
+            else if (Detail.StartsWith("PHYSICAL RE-OBSERVATION: FAILED", StringComparison.Ordinal))
+                SetReobservationFailed(Detail);
         }
 
         public void SetReobservationComplete(PatrolObservation observation)
@@ -141,6 +146,7 @@ namespace PatrolAI.UI
             RuntimeStatus = "NOT VERIFIED";
             SecondDecision = "NOT RUN";
             ModelRationale = "";
+            PatrolDecision = "NOT VERIFIED";
             PatrolAction = "NOT EXECUTED";
             FinalState = "NOT VERIFIED";
             Latency = "NOT VERIFIED";
@@ -164,6 +170,7 @@ namespace PatrolAI.UI
         public void SetReobservationFailed(string detail)
         {
             ReobservationStatus = "FAILED";
+            FinalState = "FAILED";
             SecondDecision = "NOT RUN";
             DecisionChange = "NOT VERIFIED";
             Detail = string.IsNullOrWhiteSpace(detail)

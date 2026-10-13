@@ -26,23 +26,45 @@ namespace PatrolAI.Competition
         [SerializeField] private VGPhase4FusionController fusionController;
         [SerializeField] private VGPhase5TemporalController temporalController;
 
-        public string AgenticStatus { get; private set; } = "IDLE";
-        public string FusionStatus { get; private set; } = "IDLE";
-        public string TemporalStatus { get; private set; } = "IDLE";
+        private string agenticStatus = "IDLE", fusionStatus = "IDLE", temporalStatus = "IDLE";
+        private int workflowRevision;
+        public string AgenticStatus {
+            get => CurrentStatus(agenticController != null && agenticController.IsRunning,
+                RawAgenticState, agenticStatus);
+            private set => agenticStatus = value;
+        }
+        public string FusionStatus {
+            get => CurrentStatus(fusionController != null && fusionController.IsRunning,
+                RawFusionState, fusionStatus);
+            private set => fusionStatus = value;
+        }
+        public string TemporalStatus {
+            get => CurrentStatus(temporalController != null && temporalController.IsRunning,
+                RawTemporalState, temporalStatus);
+            private set => temporalStatus = value;
+        }
+        // Physical work can still be settling after a presentation timeout or ownership reset.
+        public bool IsWorkflowRunning => (agenticController != null && agenticController.IsRunning)
+            || (fusionController != null && fusionController.IsRunning)
+            || (temporalController != null && temporalController.IsRunning);
         public bool HasActiveAction { get; private set; }
         public PatrolBaselineAction ActiveAction { get; private set; }
 
         public string AgenticDisplayState => DisplayState(
             agenticController != null && agenticController.IsRunning,
-            AgenticControllerState, AgenticStatus);
-        public string AgenticControllerState => ValueOrUnavailable(
+            RawAgenticState, agenticStatus);
+        private string RawAgenticState => ValueOrUnavailable(
             agenticController == null ? null : agenticController.State);
+        public string AgenticControllerState => DisplayPhase(
+            agenticController != null && agenticController.IsRunning, RawAgenticState, agenticStatus);
 
         public string FusionDisplayState => DisplayState(
             fusionController != null && fusionController.IsRunning,
-            FusionControllerState, FusionStatus);
-        public string FusionControllerState => ValueOrUnavailable(
+            RawFusionState, fusionStatus);
+        private string RawFusionState => ValueOrUnavailable(
             fusionController == null ? null : fusionController.State);
+        public string FusionControllerState => DisplayPhase(
+            fusionController != null && fusionController.IsRunning, RawFusionState, fusionStatus);
         public string FusionResultStatus => ValueOrUnavailable(
             fusionController == null ? null : fusionController.FusionStatus);
         public string FusionVerification => ValueOrUnavailable(
@@ -58,9 +80,11 @@ namespace PatrolAI.Competition
 
         public string TemporalDisplayState => DisplayState(
             temporalController != null && temporalController.IsRunning,
-            TemporalControllerState, TemporalStatus);
-        public string TemporalControllerState => ValueOrUnavailable(
+            RawTemporalState, temporalStatus);
+        private string RawTemporalState => ValueOrUnavailable(
             temporalController == null ? null : temporalController.State);
+        public string TemporalControllerState => DisplayPhase(
+            temporalController != null && temporalController.IsRunning, RawTemporalState, temporalStatus);
         public string TemporalOutcome => ValueOrUnavailable(
             temporalController == null ? null : temporalController.Outcome);
         public string TemporalPreviousCondition => ValueOrUnavailable(
@@ -106,7 +130,7 @@ namespace PatrolAI.Competition
                 agenticController.RunAgenticInspection,
                 NoOp,
                 NoOp);
-            StartCoroutine(ObserveAgenticCompletion());
+            StartCoroutine(ObserveAgenticCompletion(workflowRevision));
         }
 
         public void RunMultiSourceFusion()
@@ -124,7 +148,7 @@ namespace PatrolAI.Competition
                 NoOp,
                 fusionController.RunMultiSourceFusion,
                 NoOp);
-            StartCoroutine(ObserveFusionCompletion());
+            StartCoroutine(ObserveFusionCompletion(workflowRevision));
         }
 
         public void EvaluateLatestVerifiedFusion()
@@ -177,27 +201,55 @@ namespace PatrolAI.Competition
             if ((workflowStatus ?? string.Empty).StartsWith(
                 "FAILED", StringComparison.Ordinal))
                 return "FAILED";
-            if (isRunning || string.Equals(
-                workflowStatus, "RUNNING", StringComparison.Ordinal))
-                return "RUNNING";
+            if (workflowStatus == "IDLE") return "IDLE";
+            if (isRunning) return "RUNNING";
+            // A terminal controller takes precedence over the observer's cached RUNNING value.
             return ValueOrUnavailable(controllerState);
         }
 
-        private IEnumerator ObserveAgenticCompletion()
+        public static string DisplayPhase(bool isRunning, string controllerState, string workflowStatus)
+        {
+            string state = DisplayState(isRunning, controllerState, workflowStatus);
+            if (state != "RUNNING") return state;
+            // During startup, the inherited controller can retain its previous terminal phase
+            // while returning home. It is not the active phase of this new execution.
+            return controllerState == "FAILED" || controllerState == "COMPLETE"
+                || controllerState == "IDLE" || controllerState == "UNAVAILABLE"
+                ? "RUNNING" : ValueOrUnavailable(controllerState);
+        }
+
+        private static string CurrentStatus(bool isRunning, string controllerState, string workflowStatus)
+        {
+            string state = DisplayState(isRunning, controllerState, workflowStatus);
+            if (state == "FAILED") return (workflowStatus ?? "").StartsWith("FAILED", StringComparison.Ordinal)
+                ? workflowStatus : "FAILED — " + controllerState;
+            return state == "COMPLETE" && workflowStatus == "VERIFIED" ? "VERIFIED" : state;
+        }
+
+        public void ClearWorkflowPresentation()
+        {
+            workflowRevision++;
+            HasActiveAction = false;
+            agenticStatus = fusionStatus = temporalStatus = "IDLE";
+        }
+
+        private IEnumerator ObserveAgenticCompletion(int revision)
         {
             yield return null;
-            while (agenticController != null && agenticController.IsRunning)
+            while (revision == workflowRevision && agenticController != null && agenticController.IsRunning)
                 yield return null;
+            if (revision != workflowRevision) yield break;
             AgenticStatus = agenticController != null && agenticController.State == "COMPLETE"
                 ? "COMPLETE"
                 : "FAILED — " + (agenticController == null ? "CONTROLLER LOST" : agenticController.State);
         }
 
-        private IEnumerator ObserveFusionCompletion()
+        private IEnumerator ObserveFusionCompletion(int revision)
         {
             yield return null;
-            while (fusionController != null && fusionController.IsRunning)
+            while (revision == workflowRevision && fusionController != null && fusionController.IsRunning)
                 yield return null;
+            if (revision != workflowRevision) yield break;
             FusionStatus = fusionController != null && fusionController.State == "COMPLETE"
                 ? "COMPLETE"
                 : "FAILED — " + (fusionController == null ? "CONTROLLER LOST" : fusionController.State);
@@ -209,6 +261,7 @@ namespace PatrolAI.Competition
 
         private void Select(PatrolBaselineAction action)
         {
+            workflowRevision++;
             ActiveAction = action;
             HasActiveAction = true;
         }

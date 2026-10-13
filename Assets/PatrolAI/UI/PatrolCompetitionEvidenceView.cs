@@ -83,8 +83,7 @@ namespace PatrolAI.UI
 
             DrawHeader(scenarioRunner.Evidence);
             DrawScenarioMenu();
-            bool reviewerMode = !scenarioRunner.IsRunning && (autoPatrol.IsRunning
-                || scenarioRunner.Evidence.ObservationSource.Contains("HELD-OUT HC09"));
+            bool reviewerMode = !scenarioRunner.IsRunning && scenarioRunner.ActiveFlow == "AUTO PATROL";
             if (reviewerMode) { DrawHc09ReviewerPanel(scenarioRunner.Evidence); DrawInspectorStatus(scenarioRunner.Evidence); }
             else { DrawBaselineMenu(); DrawWorkflowDetailPanel(); }
             DrawEvidencePanel(scenarioRunner.Evidence);
@@ -247,13 +246,25 @@ namespace PatrolAI.UI
 
             if (GUI.Button(new Rect(left, top, buttonWidth, 38f),
                 "AGENTIC INSPECTION", agenticStyle))
+            {
+                scenarioRunner.BeginFlow("BASELINE", null);
+                scenarioRunner.Evidence.SetPhysicalWorkflowStatus("AGENTIC INSPECTION — NO NEMOTRON INFERENCE");
                 baselineAdapter.RunAgenticInspection();
+            }
             if (GUI.Button(new Rect(left + buttonWidth + gap, top, buttonWidth, 38f),
                 "MULTI SOURCE FUSION", fusionStyle))
+            {
+                scenarioRunner.BeginFlow("BASELINE", null);
+                scenarioRunner.Evidence.SetPhysicalWorkflowStatus("MULTI SOURCE FUSION — NO NEMOTRON INFERENCE");
                 baselineAdapter.RunMultiSourceFusion();
+            }
             if (GUI.Button(new Rect(left + (buttonWidth + gap) * 2f, top,
                 buttonWidth, 38f), "LATEST VERIFIED FUSION", temporalStyle))
+            {
+                scenarioRunner.BeginFlow("BASELINE", null);
+                scenarioRunner.Evidence.SetPhysicalWorkflowStatus("LATEST VERIFIED FUSION — NO NEMOTRON INFERENCE");
                 baselineAdapter.EvaluateLatestVerifiedFusion();
+            }
 
             GUI.Label(new Rect(left, rect.y + 76f, buttonWidth, 16f),
                 baselineAdapter.AgenticStatus, smallLabelStyle);
@@ -307,6 +318,7 @@ namespace PatrolAI.UI
 
             if (!baselineAdapter.HasActiveAction)
             {
+                workflowDetail.Clear();
                 GUI.Label(new Rect(rect.x + 20f, rect.y + 18f, rect.width - 40f, 30f),
                     "BASELINE WORKFLOW DETAIL", headingStyle);
                 GUI.Label(new Rect(rect.x + 20f, rect.y + 62f, rect.width - 40f, 24f),

@@ -15,6 +15,8 @@ namespace PatrolAI.UI
             HasSelection = true;
         }
 
+        public void Clear() { HasSelection = false; }
+
         public string Title
         {
             get

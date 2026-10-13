@@ -22,6 +22,7 @@ namespace PatrolAI.Scenarios
             = new PatrolCompetitionEvidenceState();
         public PatrolDemoScenarioResult LatestResult { get; private set; }
         public bool IsRunning { get; private set; }
+        public string ActiveFlow { get; private set; } = "IDLE";
         private PatrolBaselineActionAdapter baselineAdapter;
         private DateTime reobservationStartedUtc;
         private string reobservationSessionId;
@@ -29,6 +30,15 @@ namespace PatrolAI.Scenarios
         private void Awake()
         {
             baselineAdapter = GetComponent<PatrolBaselineActionAdapter>();
+        }
+
+        public void BeginFlow(string flow, PatrolObservation observation)
+        {
+            ActiveFlow = flow;
+            LatestResult = null;
+            if (baselineAdapter == null) baselineAdapter = GetComponent<PatrolBaselineActionAdapter>();
+            if (baselineAdapter != null) baselineAdapter.ClearWorkflowPresentation();
+            Evidence.Begin(observation);
         }
 
         public void RunSafeScenario()
@@ -62,7 +72,7 @@ namespace PatrolAI.Scenarios
                 }
             }
             catch (Exception) {
-                Evidence.Begin(scenario.observation);
+                BeginFlow(scenario.scenarioId, scenario.observation);
                 Evidence.SetReobservationFailed("CONFLICT DEMO NOT STARTED: existing run reservation or evidence storage unavailable");
                 Evidence.SetBoundedOutcome(PatrolActionMapper.Map(PatrolSafetyEnvelope.Stop(
                     "Demo reservation unavailable; conservative stop."),out bool ignored),true);
@@ -78,7 +88,7 @@ namespace PatrolAI.Scenarios
 
             IsRunning = true;
             bool observingAgenticInspection = false;
-            Evidence.Begin(scenario.observation);
+            BeginFlow(scenario.scenarioId, scenario.observation);
             try
             {
                 PatrolClosedLoopResult result;
@@ -127,7 +137,7 @@ namespace PatrolAI.Scenarios
                     {
                         LatestResult.message =
                             "Physical re-observation failed: baseline adapter unavailable.";
-                        Evidence.SetPhysicalWorkflowStatus(
+                        Evidence.SetReobservationFailed(
                             "PHYSICAL RE-OBSERVATION: FAILED — ADAPTER UNAVAILABLE");
                         if (scenario.scenarioId == "D") ApplyConflictTerminal(scenario.observation, null);
                     }
