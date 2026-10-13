@@ -50,7 +50,7 @@ namespace PatrolAI.Evaluation
             File.WriteAllText(path, json);
             Check(PatrolPhase7BRunner.Read<PatrolComparativeRun[]>(path).Length == 2, "Serialization roundtrip failed");
             Check(!json.Contains("Authorization") && !json.Contains("NEBIUS_API_KEY") && !json.Contains("C:\\"), "Unsafe serialization");
-            var original = PatrolPhase7BRunner.Recompute(Path.Combine("evaluation", "results", "phase7_ai_necessity_results.json"));
+            var original = PatrolPhase7BRunner.Recompute();
             Check(original.Count(r => !r.nemotronExactCorrect && r.nemotronActionCorrect) == 7, "Original mismatch count changed");
             Check(original.Count(r => r.nemotronAction == "REOBSERVE" && r.expectedAction != "REOBSERVE") == 1, "Original unnecessary reobserve count changed");
             Check(PatrolComparativeEvaluation.Metrics(original, false).actionCorrect == 18

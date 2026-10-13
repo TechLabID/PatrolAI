@@ -26,8 +26,14 @@ namespace PatrolAI.Evaluation
             }
         }
 
-        public static PatrolComparativeRun[] Recompute(string originalPath)
+        public static PatrolComparativeRun[] Recompute(string originalPath = null)
         {
+            if (!File.Exists(originalPath)) {
+                string publicPath = Path.Combine("Assets", "PatrolAI", "Evaluation", "Evidence",
+                    "phase7_ai_necessity_results.json");
+                originalPath = File.Exists(publicPath) ? publicPath
+                    : Path.Combine("evaluation", "results", "phase7_ai_necessity_results.json");
+            }
             var report = Read<PatrolAIBenchmarkReport>(originalPath);
             var cases = PatrolAIEvaluationDataset.Create().ToDictionary(c => c.caseId);
             if (report.cases.Length != 24 || report.cases.Select(r => r.caseId).Distinct().Count() != 24)

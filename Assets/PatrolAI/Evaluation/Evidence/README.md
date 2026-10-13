@@ -10,7 +10,7 @@ The verifier only reads stored evidence and public source. It checks the origina
 
 ## Gap and provenance
 
-The existing Phase 7B offline harness reads evaluation/results/phase7_ai_necessity_results.json. That directory is ignored, so a fresh clone lacks its historical input even though the Git/Python/offline prerequisites pass. This public copy supplies the original stored input without synthesizing model decisions. The command above checks the relevant stored-result counts without generating files. The legacy harness still expects its original relative path; this verifier reads the public evidence path directly.
+The Phase 7B offline harness uses Assets/PatrolAI/Evaluation/Evidence/phase7_ai_necessity_results.json by default, so the tracked public artifact is sufficient in a fresh clone. PatrolPhase7BRunner.Recompute uses an explicitly supplied existing file first; otherwise it prefers this public artifact, then falls back to evaluation/results/phase7_ai_necessity_results.json if the public artifact is absent. Default paths are relative to the repository root. The legacy directory remains ignored. This public copy supplies the original stored input without synthesizing model decisions. The command above checks the relevant stored-result counts without generating files and reads the public evidence path directly.
 
 Original report timestamp: 2026-10-05T06:20:31.9783051Z; stored requestCount: 24. The report contains historical normalized decision pairs and model reasons, not the full raw HTTP response. Historical REAL markers are stored metadata, not a claim of a new live call.
 
