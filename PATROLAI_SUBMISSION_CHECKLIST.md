@@ -2,7 +2,7 @@
 
 > Purpose: keep competition requirements, recorded implementation evidence, and remaining submission assets organized before final Devpost submission.
 
-**Public repository: PUBLISHED** — [TechLabID/PatrolAI](https://github.com/TechLabID/PatrolAI), commit `a32ee2188b90c0e6d17c39b21dc462b8e15f52b3`, tag `v0.8-20261013-phase8b-fairness-public-snapshot-pass`. Final public video, Devpost submission and external label review remain pending.
+**Public repository: PUBLISHED** — [TechLabID/PatrolAI](https://github.com/TechLabID/PatrolAI), current verified baseline commit `1bcdfa4`, tag `v0.8.5-20261014-standalone-python-reservation-fix-pass`. Final public video, Devpost submission and external label review remain pending.
 
 Completed implementation checks below summarize the existing [README evidence](README.md), [Windows validation](Assets/PatrolAI/Competition/PATROLAI_WINDOWS_BUILD_VALIDATION.md) and milestone records; they do not claim a new runtime run. Follow the [Phase 8B claim boundary](Assets/PatrolAI/Competition/PATROLAI_CUE_FAIRNESS_AUDIT.md): no established AI necessity or universal Nemotron superiority, and HC09 is a functional example only.
 
@@ -103,6 +103,8 @@ v0.1-patrolai-baseline
 v0.2-patrolai-phase1-complete
 v0.3-patrolai-phase2-complete
 v0.8-20261013-phase8b-fairness-public-snapshot-pass
+v0.8.4-20261014-standalone-ui-truthfulness-sync-pass
+v0.8.5-20261014-standalone-python-reservation-fix-pass
 ```
 
 Before final submission:
@@ -176,13 +178,29 @@ Action
 
 Before final demo:
 
-- [ ] Handle malformed model output.
+- [x] Handle malformed model output — PASS, existing Nemotron parser/validator offline suite (12/12).
 - [ ] Handle timeout.
 - [ ] Handle authentication failure.
 - [ ] Handle non-2xx response.
-- [ ] Handle unknown/uncertain safety result.
-- [ ] Provide safe fallback behavior.
-- [ ] Avoid presenting probabilistic model output as guaranteed truth.
+- [x] Handle unknown/uncertain safety result — PASS, existing insufficient-evidence fallback and `UNKNOWN → REOBSERVE` checks.
+- [x] Provide safe fallback behavior — PASS, existing invalid-decision and visible FALLBACK checks.
+- [x] Avoid presenting probabilistic model output as guaranteed truth — PASS, existing Runtime Truthfulness checks and retained claim limitations.
+
+The timeout/authentication/non-2xx items remain open: dedicated model-request failure validation is NOT VERIFIED by the recorded results cited here. Offline fixtures are not live cloud inference.
+
+### Recorded Phase 10A fresh-clone standalone validation
+
+Previously owner-confirmed at `v0.8.5` / `1bcdfa4`; this documentation synchronization performs no new build, runtime run, or inference.
+
+- [x] Fresh clone/tag and clean Windows rebuild — PASS.
+- [x] Bundled executable-relative `.patrolai-python/python.exe`, Python `3.12.4`, without `PATROLAI_PYTHON` — PASS; no separate destination-machine Python installation required.
+- [x] Phase 5 integrated targeted suite — 24/24 PASS.
+- [x] Standalone D Run #1 and Run #2 — PASS, without manual reservation cleanup.
+- [x] Primary OpenCV evidence, physical re-observation in Unity simulation, and secondary observation — PASS.
+- [x] Verification `COMPLETE / VERIFIED`, safety envelope `STOP`, final state `STOPPED`, and correct reservation release — PASS.
+- [x] Runtime Truthfulness preserved — PASS; REAL applies only to successful current Nebius/Nemotron inference. Unity remains simulation and local/sample evidence retains its provenance.
+
+See [Windows validation](Assets/PatrolAI/Competition/PATROLAI_WINDOWS_BUILD_VALIDATION.md) and [recorded offline validation scope](tests/patrol_ui_state/README.md). These results do not complete the public video, Devpost, external review, feedback, or final submission tag.
 
 ## 9. Public Repository Requirements
 

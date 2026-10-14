@@ -1,6 +1,6 @@
 # PatrolAI Architecture
 
-PatrolAI targets the **Physical AI track of the Nebius × NVIDIA Global AI Hackathon**. The source repository is [publicly available](https://github.com/TechLabID/PatrolAI); the published Phase 8B snapshot is `a32ee2188b90c0e6d17c39b21dc462b8e15f52b3`, tagged `v0.8-20261013-phase8b-fairness-public-snapshot-pass`.
+PatrolAI targets the **Physical AI track of the Nebius × NVIDIA Global AI Hackathon**. The source repository is [publicly available](https://github.com/TechLabID/PatrolAI); the current verified public baseline is commit `1bcdfa4`, tagged `v0.8.5-20261014-standalone-python-reservation-fix-pass`.
 
 ## Current PatrolAI architecture
 

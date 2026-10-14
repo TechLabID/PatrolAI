@@ -31,6 +31,8 @@ Those systems remain baseline dependencies. PatrolAI's adapters call their publi
 | `v0.7-20261004-patrolai-phase5-demo-pass` | Deterministic SAFE, REOBSERVE, and HAZARD scenarios and competition demo UI | Manual Unity validation recorded by the project owner |
 | `v0.7.1-20261004-patrolai-phase5c-workflow-ui-pass` | Context-sensitive baseline workflow details, truthful running/completion/failure reporting | Adapter tests and manual Unity validation |
 | `v0.7.2-20261004-patrolai-phase5d-ui-polish-pass` | Reference-led competition UI polish without controller changes | Compile/test evidence and manual visual validation |
+| `v0.8.4-20261014-standalone-ui-truthfulness-sync-pass` | Synchronization of competition UI with current workflow ownership, controller state, and terminal outcomes | Recorded offline state/truthfulness regressions; fixtures do not prove live inference or rendered standalone behavior |
+| `v0.8.5-20261014-standalone-python-reservation-fix-pass` (`1bcdfa4`) | Post-build executable-relative Python provisioning and D-run reservation lifecycle fix | Previously owner-confirmed Phase 10A fresh-clone Windows rebuild and two standalone D runs without manual reservation cleanup; existing offline regressions support runtime discovery and reservation release |
 
 ## New closed-loop behavior
 
@@ -58,9 +60,10 @@ Offline validation and source compilation PASS. Phase 7/7B manual Unity validati
 
 - Nemotron parser/validator offline tests: 12/12 PASS.
 - Phase 4 closed-loop targeted tests: 10/10 PASS.
-- Phase 5 integrated targeted tests: 22/22 PASS.
+- Phase 5 integrated targeted tests at Phase 10A: 24/24 PASS.
 - Live Nemotron validation: HTTP 200, response JSON emitted, parser PASS, validator PASS.
 - Live hazard closed loop: `REAL`, `DANGER / STOP`, final state `STOPPED`.
 - Phase 5 scenarios and UI: manually validated in Unity by the project owner.
+- Current protected baseline: `v0.8.5` / `1bcdfa4`. Previously owner-confirmed Phase 10A fresh-clone Windows rebuild: PASS, bundled Python `3.12.4` without `PATROLAI_PYTHON`; standalone D Run #1 and Run #2: PASS without manual reservation cleanup. Primary OpenCV evidence, physical re-observation in Unity simulation, and secondary observation: PASS; verification `COMPLETE / VERIFIED`, safety envelope `STOP`, final state `STOPPED`, reservation release and Runtime Truthfulness: PASS. No new runtime run is claimed by this documentation update. [Windows validation](PATROLAI_WINDOWS_BUILD_VALIDATION.md).
 
 These are engineering validation observations, not safety certification, production deployment, or physical-hardware evidence.

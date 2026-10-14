@@ -87,6 +87,8 @@ The overlay keeps decision evidence visible without exposing credentials. It rep
 
 ## Requirements
 
+These are source/Editor and build-machine requirements. A prepared Windows build includes executable-relative `.patrolai-python/python.exe` (verified Python `3.12.4`) and its pinned packages; the destination machine does not require a separate Python installation. `NEBIUS_API_KEY` remains external.
+
 - Windows 10/11
 - Unity `6000.6.3f1`
 - Python 3.12 x64
@@ -140,11 +142,12 @@ The Windows executable and its runtime artifacts are intentionally excluded from
 
 - Nemotron parser/validator offline suite: **12/12 PASS**.
 - Phase 4 closed-loop targeted suite: **10/10 PASS**.
-- Phase 5 integrated targeted suite after UI/scenario work: **22/22 PASS**.
+- Phase 5 integrated targeted suite at Phase 10A: **24/24 PASS**.
 - Phase 4 live validation: one observed HTTP 200 call produced `DANGER / STOP`, final state `STOPPED`, in 1243 ms.
 - Phase 5 live hazard validation: one observed HTTP 200 `REAL` call produced `DANGER / STOP`, final state `STOPPED`, in 1381 ms.
 - Windows Standalone x86_64 build and executable launch: **PASS**.
 - Manual standalone validation: competition UI, Agentic Inspection, Multi Source Fusion, Latest Verified Fusion, Scenario B re-observation, Scenario C `REAL / DANGER / STOP / STOPPED`, and `EXIT PATROLAI`: **PASS**.
+- Phase 10A fresh-clone validation at `v0.8.5`: **PASS — previously owner-confirmed**. A clean Windows rebuild used bundled Python `3.12.4` without `PATROLAI_PYTHON`; standalone D Run #1 and Run #2 passed without manual reservation cleanup. Primary OpenCV evidence, physical re-observation in Unity simulation, secondary observation, and `COMPLETE / VERIFIED` passed; the safety envelope produced `STOP`, final state `STOPPED`, and reservation release passed. Runtime Truthfulness was preserved.
 - Phase 8B cue/fairness audit: **16/16 held-out cases and 24/24 original benchmark cases audited** using stored data/results only; **0 new inference calls** and **0 benchmark reruns**.
 - Phase 8B freeze/integrity verification: **9/9 hashes MATCH** for the held-out freeze manifest; no few-shot contamination was found in the inspected production prompt/client path.
 - Phase 8B held-out no-explicit-cue subset: Rule v2, raw Nemotron, and hybrid were each **8/8 action-correct**. In the conflicting no-cue subset, all three were **2/2 action-correct**.
@@ -163,12 +166,12 @@ New competition work includes the PatrolAI identity and contracts, Nebius client
 - The project is a simulated Physical AI prototype; no physical hardware is claimed.
 - Cloud inference requires network access, a valid account/key, and current model availability.
 - Model output remains probabilistic and is constrained by parser, validator, and safe fallback policy.
-- Windows standalone validation proves the tested local configuration; a fresh clone still requires Unity, Python, package installation, a valid Nebius key, and network access.
+- Phase 10A verified a fresh-clone Windows rebuild and two standalone D runs in the tested configuration. Building from source requires Unity and the documented Python/package setup; running the complete prepared build requires no separate Python installation. A valid external Nebius key and network access remain required for live inference; universal reproducibility is not claimed.
 - The public source snapshot has passed the public-readiness audit; secrets, provenance-unverified media, generated files, and local-only files are excluded.
 - Phase 8B found explicit or action-implying cues in **8/16 held-out cases** under the conservative rubric. Both stored raw-model improvements over Rule v2 in the conflicting held-out subset occurred in cued cases.
 - PatrolAI therefore does **not** claim that Nemotron universally outperforms Rule v2 or that AI necessity has been established by this pilot.
 
-**Public repository status: PUBLISHED.** This snapshot has passed the public-readiness audit. Repository: [TechLabID/PatrolAI](https://github.com/TechLabID/PatrolAI). Published snapshot: `a32ee2188b90c0e6d17c39b21dc462b8e15f52b3`, tag `v0.8-20261013-phase8b-fairness-public-snapshot-pass`.
+**Public repository status: PUBLISHED.** This snapshot has passed the public-readiness audit. Repository: [TechLabID/PatrolAI](https://github.com/TechLabID/PatrolAI). Current verified baseline: commit `1bcdfa4`, tag `v0.8.5-20261014-standalone-python-reservation-fix-pass`.
 
 ## Third-Party Assets and Dependencies
 

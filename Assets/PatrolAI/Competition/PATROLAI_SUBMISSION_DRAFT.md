@@ -53,7 +53,8 @@ The other key challenge was truthful integration: a successful-looking UI must n
 - Invalid model output safely becomes `UNKNOWN / REOBSERVE` instead of an unsafe command.
 - Scenario B triggers re-observation in Unity simulation through the existing public controller; A and C do not.
 - The interface exposes provider, model, request state, decision, action, final state, and latency.
-- Targeted suites passed: 12/12 Nemotron, 10/10 Phase 4, and 22/22 integrated Phase 5 tests.
+- Targeted suites passed: 12/12 Nemotron, 10/10 Phase 4, and 24/24 integrated Phase 5 tests at Phase 10A.
+- Previously owner-confirmed Phase 10A validation at `v0.8.5` / `1bcdfa4`: a fresh-clone clean Windows rebuild used bundled executable-relative Python `3.12.4` without `PATROLAI_PYTHON`; two standalone D runs passed without manual reservation cleanup, with `COMPLETE / VERIFIED`, bounded `STOP / STOPPED`, and correct reservation release. The complete prepared build needs no separate destination-machine Python installation; `NEBIUS_API_KEY` remains external. [Windows validation](PATROLAI_WINDOWS_BUILD_VALIDATION.md).
 
 ## Evaluation and demo disclosure
 
@@ -73,7 +74,7 @@ Structured output is a system property, not only a prompt choice. Schema enforce
 
 ## What's next
 
-- Public source snapshot published: [TechLabID/PatrolAI](https://github.com/TechLabID/PatrolAI), commit `a32ee2188b90c0e6d17c39b21dc462b8e15f52b3`, tag `v0.8-20261013-phase8b-fairness-public-snapshot-pass`.
+- Public repository published: [TechLabID/PatrolAI](https://github.com/TechLabID/PatrolAI), current verified baseline commit `1bcdfa4`, tag `v0.8.5-20261014-standalone-python-reservation-fix-pass`.
 - Record the final under-three-minute public demo with at least one minute of application modules in action.
 - Add the public repository and video URLs to Devpost, then re-run the final submission gate.
 

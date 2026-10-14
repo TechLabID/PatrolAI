@@ -1,5 +1,31 @@
 # PatrolAI Windows Build Validation
 
+## Current verified baseline — v0.8.5 (2026-10-14)
+
+Commit `1bcdfa4`; tag `v0.8.5-20261014-standalone-python-reservation-fix-pass`.
+
+The Windows post-build provisioning step now creates `.patrolai-python/` beside `PatrolAI.exe`, including the executable-relative `python.exe` and pinned packages. Bundled Python was verified as `3.12.4`. Copy the complete prepared build directory; the destination machine does not require a separate Python installation. Source/Editor setup and the build machine still require the documented Python prerequisites.
+
+`PATROLAI_PYTHON` is an optional explicit override; an invalid explicit override must fail truthfully rather than silently select another interpreter. The legacy executable-relative `.venv-phase2` remains a supported discovery option, but creating it is unnecessary for a normal prepared build. There is no runtime download, no bundled API key, and `NEBIUS_API_KEY` remains external. See [standalone runtime and reservation lifecycle](../../../docs/Standalone_Runtime.md).
+
+### Recorded Phase 10A fresh-clone result
+
+The project owner previously confirmed the following validation of a fresh clone at the protected tag; no new runtime validation is performed by this documentation update:
+
+- Fresh clone/tag and clean Windows rebuild: **PASS**.
+- Bundled executable-relative Python `3.12.4`, with no `PATROLAI_PYTHON` runtime override: **PASS**.
+- Phase 5 integrated targeted suite: **24/24 PASS** (also recorded in the existing offline regression evidence).
+- Standalone D Run #1 and Run #2 without manual reservation cleanup: **PASS**.
+- Primary OpenCV evidence, physical re-observation in Unity simulation, and secondary observation: **PASS**.
+- Verification: **COMPLETE / VERIFIED**; safety envelope: **STOP**; final state: **STOPPED**; reservation released correctly: **PASS**.
+- Runtime Truthfulness preserved: **PASS**. REAL means only successful current Nebius/Nemotron inference; local/sample observation provenance and Unity simulation remain separate.
+
+These results cover the tested Windows configuration, not universal reproducibility, industrial validation, physical hardware execution, or safety certification.
+
+## Historical Phase 6B.1 validation — superseded deployment setup
+
+The following 2026-10-04 record preserves the earlier build and manual validation facts. Its external-Python / locally created `.venv-phase2` deployment instructions are historical and are superseded by the prepared v0.8.5 bundle described above.
+
 **Date:** 2026-10-04
 **Overall status:** WINDOWS BUILD AND MANUAL EXECUTABLE WORKFLOW PASS
 
@@ -29,7 +55,7 @@ requirements-phase2.txt
 exchange/
 ```
 
-No Python executable, virtual environment, API key, `.env`, or developer-specific path is copied by the build. The standalone dependency model is external Python 3.12 x64 plus an executable-relative `.venv-phase2` created from `requirements-phase2.txt`. An advanced local override may set `PATROLAI_PYTHON` to an absolute compatible Python executable. Missing Python/packages remain a truthful workflow failure.
+At Phase 6B.1, no Python executable, virtual environment, API key, `.env`, or developer-specific path was copied by the build. The historical standalone dependency model was external Python 3.12 x64 plus an executable-relative `.venv-phase2` created from `requirements-phase2.txt`. An advanced local override could set `PATROLAI_PYTHON` to an absolute compatible Python executable. Missing Python/packages remained a truthful workflow failure. The external-Python deployment requirement is superseded by v0.8.5 post-build provisioning; API keys remain external.
 
 ## Offline compile and dependency evidence
 
@@ -69,7 +95,7 @@ The user supplied the manual standalone results above after exercising the rebui
 
 ## Standalone Python workflow validation
 
-A local executable-relative `.venv-phase2` was created for validation using installed Python `3.12.4`, then the pinned requirements were installed: OpenCV `5.0.0.93` and NumPy `2.2.6`. This ignored local environment is validation/deployment output, not source-controlled or silently bundled by the build.
+During the historical Phase 6B.1 validation, a local executable-relative `.venv-phase2` was created using installed Python `3.12.4`, then the pinned requirements were installed: OpenCV `5.0.0.93` and NumPy `2.2.6`. That ignored local environment was validation/deployment output, not source-controlled or bundled by that earlier build. This manual setup is superseded for a normal prepared v0.8.5 build.
 
 Using the copied runtime beside the rebuilt executable and prior real Unity observation files:
 
@@ -79,7 +105,7 @@ Using the copied runtime beside the rebuilt executable and prior real Unity obse
 - Latest verified fusion temporal evaluation: **PASS**, `NO_CHANGE`.
 - Targeted Phase 3–5 regressions: **17/17 PASS**.
 
-These prove the fixed standalone Python dependency layout. They do not substitute for clicking the three controls or visually observing physical movement in the running executable.
+These historical checks prove the Phase 6B.1 standalone Python dependency layout. They do not substitute for clicking the three controls or visually observing physical movement in the running executable.
 
 ## Live executable runtime
 
@@ -91,6 +117,8 @@ These prove the fixed standalone Python dependency layout. They do not substitut
 No request count or latency is recorded here because those values were not included in the latest manual evidence.
 
 ## Evidence boundary
+
+This boundary applies to the historical Phase 6B.1 record; the later owner-confirmed Phase 10A fresh-clone evidence is listed separately above.
 
 - Automated/backend evidence: compile, Windows build, executable process startup, runtime-support copy, Python dependency layout, and targeted Phase 3–5 regressions.
 - User manual evidence: competition UI and controls, three inherited workflow outcomes, Scenario B movement/re-observation, Scenario C real Nemotron decision/action, and exit-button behavior.
