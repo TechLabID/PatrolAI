@@ -14,7 +14,9 @@ PatrolAI helps a simulated industrial inspector decide when to continue, stop, o
 
 ## Inspiration and problem
 
-Industrial safety patrols face two dangerous failure modes: overlooking a real hazard and acting confidently on incomplete evidence. PatrolAI explores an inspection loop that can explicitly recognize uncertainty, move to inspect again, and expose the evidence behind each action.
+Industrial inspection can fail both by missing a hazard and by acting confidently on incomplete or conflicting evidence. PatrolAI explores an inspection loop that treats uncertainty as a reason to gather another observation and makes the observation → decision → action chain visible.
+
+The intended audiences are industrial safety teams, inspection operators, and developers/researchers building autonomous inspection systems. This simulated research prototype offers a way to examine that workflow; it does not represent current production deployment.
 
 ## What it does
 
@@ -26,6 +28,19 @@ PatrolAI follows `sense → perceive → reason → decide → act`:
 4. A parser and validator convert only policy-consistent output into a `PatrolDecision`.
 5. The agent continues, re-observes through the existing inspector workflow, or stops.
 6. The competition overlay displays the truthful runtime mode and the full decision/action state.
+
+PatrolAI is not a chatbot or static dashboard: a validated AI decision changes simulated agent behavior and can trigger active re-observation before continuing or stopping. The distinguishing demonstration is the full sequence from uncertain evidence through mobile-inspector movement and a second observation to a validated final action. `REAL` means only successful current Nebius/Nemotron inference; `LOCAL SAMPLE` identifies observation provenance where applicable, while `UNITY SIMULATION` identifies the environment.
+
+## Potential value
+
+For the intended audiences, the prototype explores:
+
+- Uncertainty-aware inspection that distinguishes a clear condition from incomplete or conflicting evidence.
+- A traceable observation → decision → action chain that operators and researchers can inspect.
+- Active re-observation to gather more evidence instead of treating an uncertain first view as sufficient.
+- Bounded execution through deterministic parsing, validation, and safety logic; the model proposes a decision within those limits.
+
+These are potential workflow benefits, not measured real-world safety improvement, ROI, accident reduction, or deployment impact. Industrial validation and safety certification are not claimed; the safety envelope does not guarantee hazard detection.
 
 ## How we built it
 
