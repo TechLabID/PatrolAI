@@ -4,6 +4,10 @@
 
 PatrolAI is a Unity-based industrial inspection prototype that closes the loop from visual observation to a validated safety action. It combines inherited OpenCV perception and mobile-inspector behavior with new Nebius Token Factory and NVIDIA Nemotron reasoning developed for the Nebius × NVIDIA Global AI Hackathon.
 
+## Demo Video
+
+https://youtu.be/cFn8F_BaJTM
+
 ## Problem
 
 Industrial patrols must distinguish normal conditions, confirmed hazards, and insufficient evidence. A detector alone cannot safely decide whether to continue, stop, or inspect again, while a language-model response cannot be trusted without a strict contract and policy validation.
